@@ -1,19 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import LoginView from '../views/LoginView.vue'
 
 const routes = [
   {
+    // 로그인 화면 주소
     path: '/',
-    name: 'home',
-    component: HomeView
+    name: 'login',
+    component: LoginView
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    // 단말기 목록 주소
+    path: '/device-list-board',
+    name: 'device-list-board',
+    component: () => import('../views/CommonView.vue')
+  },
+  {
+    // 결재문서함 주소
+    path: '/approval-list-board',
+    name: 'approval-list-board',
+    component: () => import('../views/ApprovalView.vue')
+  },
+  {
+    // 공지사항
+    path: '/notice-board',
+    name: 'notice-board',
+    component: () => import('../views/NoticeView.vue')
+  },
+  {
+    // 어드민
+    path: '/admin-board',
+    name: 'admin-board',
+    component: () => import('../views/AdminView.vue')
   }
 ]
 
