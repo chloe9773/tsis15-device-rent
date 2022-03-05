@@ -1,0 +1,21 @@
+.left-menu-item:hover {
+  background-color: #2879F7;
+  color: #fff;
+}
+.active {
+  background-color: #2879F7!important;
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+.device-info-wrap {
+  margin-left: 20%;
+}
+
+td {
+  padding: 10px;
+}
+
+.device-info-wrap {
+  margin-left: 20%;
+}

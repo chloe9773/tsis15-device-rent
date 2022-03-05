@@ -18,7 +18,7 @@
       </div>
       <div class="nav-right">
         <div class="p-20 menu">
-          <router-link to="/admin-board">관리자</router-link>
+          <router-link to="/admin-board/admin">관리자</router-link>
         </div>
       </div>
     </div>
@@ -29,4 +29,5 @@
   @import url("@/assets/css/reset.css");
   @import url("@/assets/css/common.css");
   @import url("@/assets/css/head.css");
+  @import url("@/assets/css/admin.css");
 </style>
