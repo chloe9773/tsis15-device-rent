@@ -55,6 +55,9 @@
 .mt-15 {
     margin-top: 15px;
 }
+.mt-20 {
+    margin-top: 20px;
+}
 .mt-50 {
     margin-top: 50px;
 }
@@ -94,6 +97,12 @@
 }
 .bt-2 {
     border-top: 2px solid #c5c5c5;
+}
+.bb-l-2 {
+    border-bottom: 2px solid #e8e8e8;
+}
+.bt-l-2 {
+    border-top: 2px solid #e8e8e8;
 }
 
 /* radius */
@@ -289,6 +298,25 @@
 }
 .cancel-btn {
     background-color:#c5c5c5!important;
+}
+
+.pg-btn {
+    background-color:#fff;
+    padding: 5px 10px;
+    color: #000;
+    border-radius: 2px;
+    border: 1px solid #c5c5c5;
+    cursor: pointer;
+    margin-right: 3px;
+}
+.pg-btn:hover {
+    background-color: #2879F7;
+    color: #fff;
+}
+.pg-btn.disable:hover {
+    background-color: #fff;
+    color: #000;
+    cursor: default;
 }
 
 /* common table */
