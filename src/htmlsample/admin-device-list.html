@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="/css/common.css" rel="stylesheet">
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/head.css" rel="stylesheet">
+    <script src="/js/common.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://kit.fontawesome.com/64f7ef32af.js" crossorigin="anonymous"></script>
+    <style>
+        .active {
+            background-color: #2879F7!important;
+            color: #fff;
+            border: 1px solid transparent;
+        }
+        
+        td {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top mb-50">
+        <div class="logo-img-wrap mb-30">
+            <img src="/img/img_symbol.png" alt="" class="logo">
+        </div>
+        <div class="main-nav d-flex space-between bg-highlight white f-18 font-700 mb-50">
+            <div class="nav-left d-flex space-between">
+                <a href="device-board.html">
+                    <div class="menu p-20">
+                        단말기 목록
+                    </div>
+                </a>
+                <a href="admin-add.html">
+                    <div class="menu p-20">
+                        결재문서함
+                    </div>
+                </a>
+                <a href="notice-board.html">
+                    <div class="menu p-20">
+                        공지사항
+                    </div>
+                </a>
+            </div>
+            <div class="nav-right">
+                <a href="admin-main.html"></a>
+                    <div class="menu menu-admin p-20">
+                        관리자
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="main-content-admin d-flex">
+        <div class="left-menu-wrap w-10 mr-70">
+            <div class="left-menu b-1 cursor">
+                <a href="admin-manage.html">
+                    <div class="left-menu-item p-20 t-center bb-1">
+                        user 
+                    </div>
+                </a>
+                <a href="admin-device-add.html">
+                    <div class="left-menu-item p-20 t-center">
+                        device 
+                    </div>
+                </a>
+                <a href="admin-device-list.html">
+                    <div class="left-menu-item p-20 t-center active">
+                        manage
+                    </div>
+                </a>
+            </div>
+        </div>  
+        <div class="right-content b-1 p-35 w-60 border-radius-2">
+            <div class="table-title mb-20 d-flex space-between">
+                <select name="" id="" class="p-5 w-20">
+                    <option value="search-keyword">부서명</option>
+                </select>
+                <div class="input-wrap p-5 b-1 w-70">
+                    <input type="text" class="" />
+                    <span class="float-r mr-5">search</span>
+                </div>
+            </div>
+            <div class="table-wrap w-100">
+                <table class="table">
+                    <thead class="f-14 font-700 bb-2 bt-2">
+                        <th class="p-20"></th>
+                        <th class="v-middle">임대시작일</th>
+                        <th class="v-middle">부서</th>
+                        <th class="v-middle">관리</th>
+                        <th class="v-middle">임대종료일</th>
+                        <th class="v-middle">부서</th>
+                        <th class="v-middle">관리</th>
+                    </thead>
+                    <tbody class="f-13 t-center">
+                        <tr class="bb-1" onclick="">
+                            <td class="w-5">1</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">2</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">3</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">4</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">5</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">6</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">7</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">8</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">9</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                        <tr class="bb-1">
+                            <td class="w-5">10</td>
+                            <td class="w-15">2022/02/17</td>
+                            <td>손보어쩌고저쩌고</td>
+                            <td class="w-10">황민재</td>
+                            <td class="w-15">2022/02.27</td>
+                            <td>기획관리웅앵</td>
+                            <td class="w-10">임건호</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

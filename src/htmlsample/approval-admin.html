@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="/css/common.css" rel="stylesheet">
+    <link href="/css/reset.css" rel="stylesheet">
+    <link href="/css/head.css" rel="stylesheet">
+    <script src="/js/common.js"></script>
+    <script src="https://kit.fontawesome.com/64f7ef32af.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.4.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <style>
+        .left-menu-item:hover {
+            background-color: #2879F7;
+            color: #fff;
+        }
+        .active {
+            background-color: #2879F7!important;
+            color: #fff;
+            border: 1px solid transparent;
+        }
+    </style>
+</head>
+<body>
+    <div class="top mb-50">
+        <div class="logo-img-wrap mb-30">
+            <img src="/img/img_symbol.png" alt="" class="logo">
+        </div>
+        <div class="main-nav d-flex space-between bg-highlight white f-18 font-700">
+            <div class="nav-left d-flex space-between">
+                <div class="menu p-20">
+                    <a href="board.html">단말기 목록</a>
+                </div>
+                <div class="menu p-20">
+                    <a href="admin-add.html">결재문서함</a>
+                </div>
+                <div class="menu p-20">
+                    <a href="notice-board.html">공지사항</a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="menu menu-admin p-20">
+                    <a href="admin-main.html">관리자</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-content-wrap position-center w-80">
+        <div class="main-content-head d-flex">
+            <select class="p-10 t-center w-10">
+                <option value="writer"> 기안자 </option>
+            </select>
+            <div class="input-wrap p-10 b-1">
+                <input type="text" class="p-5" placeholer="여기에 입력" >
+                <span>search</span>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table class="f-13 board-list" >
+                <thead>
+                    <tr class="f-16 b-1">
+                        <th>번호</th>
+                        <th>작성자</th>
+                        <th>제목</th>
+                        <th>작성일</th>
+                    </tr>
+                </thead> 
+                <tbody class="b-1 ">
+                    <tr class="b-1">
+                        <td>1</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    <tr class="b-1">
+                        <td>2</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    <tr class="b-1">
+                        <td>3</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>  
+                    <tr class="b-1">
+                        <td>4</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    <tr class="b-1">
+                        <td>5</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    <tr class="b-1">
+                        <td>6</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    <tr class="b-1">
+                        <td>7</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    <tr class="b-1">
+                        <td>8</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    <tr class="b-1">
+                        <td>9</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    <tr class="b-1">
+                        <td>10</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                </tbody>    
+            </table>
+            <div id="more_btn_div" class="t-center">
+                <a id = "more_btn" href="">
+                 더보기 
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="main-content-table position-center" >
+        <div class="main-content-table-search d-flex">
+            <select class="p-10 t-center w-10">
+                <option value="writer"> 기안자 </option>
+            </select>
+            <div class="input-wrap p-10 b-1">
+                <input type="text" class="p-5" placeholer="여기에 입력" >
+                <span>search</span>
+            </div>
+        </div>
+        <div>
+            <table class="f-13 board-list" >
+                <tr class="f-16 b-1">
+                    <th>번호</th>
+                    <th>작성자</th>
+                    <th>제목</th>
+                    <th>작성일</th>
+                </tr>
+                
+                <tbody class="b-1 ">
+                    <tr class="b-1">
+                        <td>1</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+        
+                    <tr class="b-1">
+                        <td>2</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+
+                    <tr class="b-1">
+                        <td>3</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+                    
+                    <tr class="b-1">
+                        <td>4</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+
+                    <tr class="b-1">
+                        <td>5</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+
+                    <tr class="b-1">
+                        <td>6</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+
+                    <tr class="b-1">
+                        <td>7</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+
+                    <tr class="b-1">
+                        <td>8</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+
+                    <tr class="b-1">
+                        <td>9</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+
+                    <tr class="b-1">
+                        <td>10</td>
+                        <td>가</td>
+                        <td>가의 글</td>
+                        <td>2022/03/02</td>
+                    </tr>
+
+                </tbody>
+                
+            </table>
+            <div id="more_btn_div" class="t-center">
+                <a id = "more_btn" href="">
+                 더보기 
+                </a>
+            </div>
+        </div>
+    </div> -->
+</body>
+</html>
