@@ -7,8 +7,8 @@
         <option value="contents">내용</option>
       </select>
       <div class="input-wrap p-5 b-1 w-80">
-        <input type="text" class="" />
-        <span class="float-r mr-5">search</span>
+        <input type="text" class="" /> <!-- v-model -->
+        <span class="float-r mr-5">search</span> <!-- @click -->
       </div>
     </div>
     <div class="table-wrap">
@@ -20,14 +20,15 @@
           <th class="v-middle">작성일</th>
         </thead>
         <tbody class="f-13 t-center">
-          <tr class="bb-1 cursor" :key="index" v-for="(value,index) in data.slice(0,10)" @click="goToRead(value.NOTICE_ID)">
+          <tr class="bb-1 cursor" :key="index" v-for="(value,index) in articles" @click="goToRead(value.NOTICE_ID)">
             <td class="w-10">
-              <div v-if="value.CATEGORY == 'TRUE'" class="notice"> 공지 </div>
-              <div v-else> {{ value.NOTICE_ID }} </div>
+              <!-- <div v-if="value.CATEGORY == 'TRUE'" class="notice"> 공지 </div>
+              <div v-else> {{ value.NOTICE_ID }} </div> -->
+              <div> {{ value.notice_id }} </div>
             </td>
-            <td>{{ value.TITLE }}</td>
-            <td class="w-15">{{ value.NAME }}</td>
-            <td class="w-15">{{ value.CREATED_DATE }}</td>
+            <td>{{ value.title }}</td>
+            <td class="w-15">{{ value.user_id }}</td>
+            <td class="w-15">{{ value.create_date }}</td>
           </tr>
         </tbody>
       </table>
@@ -42,13 +43,14 @@
 </template>
 
 <script>
-import sampledata from '@/assets/sampledata'
+import axios from 'axios'
+// import sampledata from '@/assets/sampledata'
 
 export default {
   name: 'NoticeList',
   data () {
     return {
-      data: sampledata
+      articles: []
     }
   },
   methods: {
@@ -70,6 +72,17 @@ export default {
         }
       })
     }
+  },
+  created () {
+    axios
+      .get('http://133.186.212.200:8080/notice')
+      .then((res) => {
+        this.articles = res.data
+        console.log(JSON.stringify(res.data))
+      })
+      .catch(() => {
+        console.log('글 읽기 오류')
+      })
   }
 }
 </script>

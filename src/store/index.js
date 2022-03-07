@@ -21,12 +21,12 @@ export default createStore({
       // console.log('JSON.stringify(userInfo) : ' + JSON.stringify(userInfo))
       alert('로그인 성공')
 
-      // routing
+      // Routing(ROLE 0: user(대여) / 1: admin(허가/관리) / 2: superadmin(권한설정))
       if (JSON.stringify(userInfo.ROLE) === '"0"') {
         router.push({ name: 'device-list-board', params: { ID: JSON.stringify(userInfo.ID) } })
-      } else if (JSON.stringify(userInfo.ROLE) === '"1"') {
+      } else if (JSON.stringify(userInfo.ROLE) === '1') {
         router.push({ name: 'approval-list-board', params: { ID: JSON.stringify(userInfo.ID) } })
-      } else if (JSON.stringify(userInfo.ROLE) === '"2"') {
+      } else if (JSON.stringify(userInfo.ROLE) === '2') {
         router.push({ name: 'adminboard', params: { ID: JSON.stringify(userInfo.ID), category: 'admin' } })
       }
     },
@@ -53,7 +53,6 @@ export default createStore({
         .post('http://133.186.212.200:8080/loginOk.do', loginObj)
         .then((res) => {
           // console.log("res JSON : " + JSON.stringify(res.data))
-
           if (res.data.RESULT === 'SUCCESS') {
             commit('loginSuccess', res.data)
           } else {
