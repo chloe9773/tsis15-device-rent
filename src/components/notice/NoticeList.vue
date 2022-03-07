@@ -1,0 +1,94 @@
+<template>
+  <div class="main-content-admin w-70 m-auto">
+    <div class="table-title mb-20 d-flex space-between w-100">
+      <select id="notice-search-category" name="notice-search-category" class="p-5 w-15">
+        <option value="title">제목</option>
+        <option value="name">작성자</option>
+        <option value="contents">내용</option>
+      </select>
+      <div class="input-wrap p-5 b-1 w-80">
+        <input type="text" class="" /> <!-- v-model -->
+        <span class="float-r mr-5">search</span> <!-- @click -->
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="table w-100" style="overflow:auto;">
+        <thead class="f-14 font-700 bb-2 bt-2">
+          <th class="p-20"></th>
+          <th class="v-middle">제목</th>
+          <th class="v-middle">작성자</th>
+          <th class="v-middle">작성일</th>
+        </thead>
+        <tbody class="f-13 t-center">
+          <tr class="bb-1 cursor" :key="index" v-for="(value,index) in articles" @click="goToRead(value.NOTICE_ID)">
+            <td class="w-10">
+              <!-- <div v-if="value.CATEGORY == 'TRUE'" class="notice"> 공지 </div>
+              <div v-else> {{ value.NOTICE_ID }} </div> -->
+              <div> {{ value.notice_id }} </div>
+            </td>
+            <td>{{ value.title }}</td>
+            <td class="w-15">{{ value.user_id }}</td>
+            <td class="w-15">{{ value.create_date }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="more bg-dark-gray mb-5">
+        <p class="p-10 f-12 font-700 t-center">더보기</p>
+      </div>
+      <div class="btn-wrap float-r">
+        <button class="cancel-btn f-12" @click="goToWrite(userId)">글쓰기</button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+// import sampledata from '@/assets/sampledata'
+
+export default {
+  name: 'NoticeList',
+  data () {
+    return {
+      articles: []
+    }
+  },
+  methods: {
+    goToRead (noticeId) {
+      this.$router.push({
+        name: 'notice-board-category',
+        params: {
+          category: 'read',
+          NOTICE_ID: noticeId
+        }
+      })
+    },
+    goToWrite (userId) {
+      this.$router.push({
+        name: 'notice-board-category',
+        params: {
+          category: 'write',
+          USER_ID: userId // 사번
+        }
+      })
+    }
+  },
+  created () {
+    axios
+      .get('http://133.186.212.200:8080/notice')
+      .then((res) => {
+        this.articles = res.data
+        console.log(JSON.stringify(res.data))
+      })
+      .catch(() => {
+        console.log('글 읽기 오류')
+      })
+  }
+}
+</script>
+
+<style>
+  td {
+    padding: 10px;
+  }
+</style>
