@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '../views/LoginView.vue'
 
+const AdminBoard = () => {
+  return import(/* webpackchunckName: "adminboard" */ '../views/AdminView.vue')
+}
+
 const routes = [
   {
     // 로그인 화면 주소
@@ -12,25 +16,31 @@ const routes = [
     // 단말기 목록 주소
     path: '/device-list-board',
     name: 'device-list-board',
-    component: () => import('../views/CommonView.vue')
+    component: () => import(/* webpackchunckName: "device-list-board" */ '../views/CommonView.vue')
   },
   {
     // 결재문서함 주소
     path: '/approval-list-board',
     name: 'approval-list-board',
-    component: () => import('../views/ApprovalView.vue')
+    component: () => import(/* webpackchunckName: "approval-list-board" */ '../views/ApprovalView.vue')
   },
   {
     // 공지사항
     path: '/notice-board',
     name: 'notice-board',
-    component: () => import('../views/NoticeView.vue')
+    component: () => import(/* webpackchunckName: "notice-board" */ '../views/NoticeView.vue')
+  },
+  {
+    // 공지사항(읽기, 쓰기)
+    path: '/notice-board/:category',
+    name: 'notice-board-category',
+    component: () => import(/* webpackchunckName: "notice-board" */ '../views/NoticeView.vue')
   },
   {
     // 어드민
-    path: '/admin-board',
-    name: 'admin-board',
-    component: () => import('../views/AdminView.vue')
+    path: '/admin-board/:category',
+    name: 'adminboard',
+    component: AdminBoard
   }
 ]
 

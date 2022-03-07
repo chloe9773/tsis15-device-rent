@@ -28,7 +28,7 @@
         />
       </div>
       <div class="t-center">
-        <button id="login-btn" name="login-btn" class="submit-btn w-50" @click='loginToDeviceListBoard'>로그인</button>
+        <button id="login-btn" name="login-btn" class="submit-btn w-50">로그인</button>
       </div>
     </form>
     <button id="logout-btn" name="logout-btn" class="w-50" @click="logout()">로그아웃</button>
@@ -39,10 +39,6 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   data () {
-    return {
-      id: null,
-      pwd: null
-    }
   },
   computed: {
     ...mapState(['isLogin', 'isLoginError'])
@@ -54,9 +50,6 @@ export default {
 </script>
 
 <style lang="css">
-@import "@/assets/css/reset.css";
-@import "@/assets/css/common.css";
-@import "@/assets/css/head.css";
 .login-wrap>form {
   box-shadow: 3px 2px 2px #c5c5c5;
 }
