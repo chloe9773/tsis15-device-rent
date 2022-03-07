@@ -1,12 +1,15 @@
 <template>
   <div id="modal" class="modal d-none"></div>
-  <div id="modal-body" class="modal-body d-none">
+  <div id="modal-body" class="modal-body d-none" style="height:75%; overflow:auto">
     <div class="top-wrap">
-      <div class="close bg-gray white cursor" style="" v-on:click="toggleModal()">X</div>
+      <div class="close bg-gray white cursor" v-on:click="toggleModal('approval',0)">X</div>
     </div>
-    <div class="clear"></div>
-    <div class="modal-content d-flex space-between mb-20">
-      <slot name="modal-content"></slot>
+    <div class="clear mb-20"></div>
+    <div class="modal-content mb-20">
+      <div class="form-wrap">
+        <slot name="modal-content-top" class="d-flex space-between"></slot>
+        <slot name="modal-content-bottom"></slot>  
+      </div>  
     </div>
   </div>
 </template>
@@ -25,9 +28,10 @@
 </style>
 <script>
   export default {
+    name: 'Modal',
     methods: {
-      toggleModal() {
-        this.$toggleModal()
+      toggleModal(category, type) {
+        this.$toggleModal(category, type)
       }
     }
   }
