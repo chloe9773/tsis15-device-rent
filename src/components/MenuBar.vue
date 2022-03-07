@@ -13,7 +13,7 @@
           <router-link to="/approval-list-board">결재문서함</router-link>
         </div>
         <div class="p-20 menu">
-          <router-link to="/notice-board">공지사항</router-link>
+          <router-link to="/notice-board/list">공지사항</router-link>
         </div>
       </div>
       <div class="nav-right">

@@ -26,7 +26,7 @@ const routes = [
   },
   {
     // 공지사항
-    path: '/notice-board',
+    path: '/notice-board/:category',
     name: 'notice-board',
     component: () => import(/* webpackchunckName: "notice-board" */ '../views/NoticeView.vue')
   },
