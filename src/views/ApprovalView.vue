@@ -170,7 +170,7 @@
   /* .request tr:nth-child(2n) {
     background-color: #ededed;
   } */
-  
+
   .form td {
       padding: 10px;
   }
@@ -179,11 +179,11 @@
       width: 65px;
       height:65px;
   }
-  
+
   .form .approval-sign {
       line-height: 30px;
   }
-    
+
   .form .table-title {
       font-weight: 700;
       background-color: #c5c5c5;
@@ -232,7 +232,7 @@ export default {
     PageBtn
   }, 
   methods: {
-    toggleModal(category, type) {
+    toggleModal (category, type) {
       this.$toggleModal(category, type)
     }
     // toggleModal: function () {
