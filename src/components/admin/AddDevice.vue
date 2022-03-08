@@ -13,36 +13,76 @@
                     </div>
                 </div>
                 <div class="right-wrap mb-20 f-14 w-50">
-                    <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
-                        <span class="item-title">시리얼 번호 :</span>
-                        <input type="text" id="serial" name="serial" tabindex="1" autofocus>
-                    </div>
-                    <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
-                        <span class="item-title">종류 :</span>
-                        <input type="text" id="kind" name="kind" tabindex="2">
-                    </div>
-                    <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
-                        <span class="item-title">브랜드 :</span>
-                        <input type="text" id="brand" name="brand" tabindex="3">
-                    </div>
-                    <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
-                        <span class="item-title">단말기명 :</span>
-                        <input type="text" id="model" name="model" tabindex="4">
-                    </div>
-                    <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
-                        <span class="item-title">상태 :</span>
-                        <input type="text" id="status" name="status" tabindex="5">
-                    </div>
-                    <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
-                        <span class="item-title">메모 :</span>
-                        <textarea id="memo" name="memo"  class="v-top" tabindex="6"></textarea>
-                    </div>
+                    <form id="device-info">
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">시리얼 번호 :</span>
+                            <input type="text" id="serialnum" name="serialnum" v-model="serialnum" tabindex="1" autofocus>
+                        </div>
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">종류 :</span>
+                            <input type="text" id="category" name="category" v-model="category" class="w-70" tabindex="2">
+                        </div>
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">브랜드 :</span>
+                            <input type="text" id="brand" name="brand" v-model="brand" class="w-70" tabindex="3">
+                        </div>
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">OS :</span>
+                            <input type="text" id="os" name="os" v-model="os" class="w-80" tabindex="4">
+                        </div>
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">단말기명 :</span>
+                            <input type="text" id="name" name="name" v-model="name" class="w-70" tabindex="5">
+                        </div>
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">가격 :</span>
+                            <input type="text" id="price" name="price" v-model="price" class="w-70" tabindex="6">
+                        </div>
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">메모 :</span>
+                            <textarea id="memo" name="memo" v-model="memo" class="v-top w-80" tabindex="7"></textarea>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
         <div class="btn-grp t-center">
-            <button type="submit" class="active-btn mr-5">등록</button>
-            <button type="button" class="cancel-btn">취소</button>
+            <button type="submit" class="active-btn mr-5" v-on:click="addDevice()">등록</button>
+            <button type="button" class="cancel-btn" v-on:click="reset()">취소</button>
         </div>
     </div>
 </template>
+
+<script>
+import axios from 'axios'
+
+export default {
+  name: 'AddDevice',
+  methods: {
+    addDevice () {
+        let device = $("#device-info").serialize()
+
+        if(this.price != undefined && !$.isNumeric(this.price)) {
+            alert("가격은 숫자만 입력해주세요.");
+        } 
+        if(this.serialnum == undefined || this.category == undefined || this.brand == undefined
+        || this.os == undefined || this.name == undefined || this.price == undefined || this.memo == undefined) {
+            alert("공백칸을 채워주세요.")
+        }
+        else {
+            axios
+            .get('http://133.186.212.200:8080/')
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((error) => {
+                alert("단말기 등록에 실패했습니다. 잠시 후 다시 시도해주세요.")
+            })
+        }
+    },
+    reset() {
+        this.$router.go()
+    }
+  }, 
+}
+</script>

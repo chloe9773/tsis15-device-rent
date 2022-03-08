@@ -1,9 +1,7 @@
 <template>
   <MenuBar/>
   <NoticeList v-if="categoryId == 'list'"/>
-  <NoticeRead v-else-if="categoryId == 'read'"/>
-  <NoticeWrite v-else-if="categoryId == 'write'"/>
-
+  <NoticeWrite v-else/>
 </template>
 
 <script>
