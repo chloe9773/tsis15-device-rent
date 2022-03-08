@@ -32,11 +32,9 @@
           </tr>
         </tbody>
       </table>
-      <div class="more bg-dark-gray mb-5">
-        <p class="p-10 f-12 font-700 t-center">더보기</p>
-      </div>
+      <PageBtn/>
       <div class="btn-wrap float-r">
-        <button class="cancel-btn f-12" @click="goToWrite(userId)">글쓰기</button>
+        <router-link to="/notice-board/write" class="cancel-btn f-12">글쓰기</router-link>
       </div>
     </div>
   </div>
@@ -44,7 +42,7 @@
 
 <script>
 import axios from 'axios'
-// import sampledata from '@/assets/sampledata'
+import PageBtn from '@/components/table/PageBtn.vue'
 
 export default {
   name: 'NoticeList',
@@ -83,6 +81,9 @@ export default {
       .catch(() => {
         console.log('글 읽기 오류')
       })
+  },
+  components: {
+    PageBtn
   }
 }
 </script>
