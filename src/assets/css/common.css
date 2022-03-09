@@ -252,6 +252,14 @@
     display: inline-block;
 }
 
+/* position */
+.pos-r {
+    position: relative;
+}
+.pos-a {
+    position: absolute;
+}
+
 /* mouse */
 .cursor {
     cursor: pointer;
