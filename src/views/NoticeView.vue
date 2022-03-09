@@ -1,7 +1,7 @@
-<template>
+<template v-if="categoryId != 'list' && categoryId == 'read' && categoryId == 'write'">
   <MenuBar/>
   <NoticeList v-if="categoryId == 'list'"/>
-  <NoticeWrite v-else/>
+  <NoticeWrite v-if="categoryId == 'read' || categoryId == 'write'"/>
 </template>
 
 <script>
@@ -21,6 +21,13 @@ export default {
     NoticeList,
     NoticeRead,
     NoticeWrite
+  },
+    // 예외처리 : categoryId가 'read' or 'write'가 아닌 경우
+  mounted () {
+    if (this.$route.params.category != 'list' && this.$route.params.category != 'read' && this.$route.params.category != 'write') {
+      alert('없는 페이지 입니다.')
+      this.$router.go(-1)
+    }
   }
 }
 </script>

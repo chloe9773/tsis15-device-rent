@@ -8,7 +8,15 @@ export default createStore({
   state: {
     userInfo: null,
     isLogin: false,
-    isLoginError: false
+    isLoginError: false,
+    articleInfo: {
+      title: '',
+      category: '',
+      user_id: '',
+      create_date: '',
+      content: '',
+      notice_id: ''
+    }
   },
   getters: {
   },
@@ -18,6 +26,7 @@ export default createStore({
       state.isLogin = true
       state.isLoginError = false
       state.userInfo = userInfo
+      state.articleInfo = {}
       // console.log('JSON.stringify(userInfo) : ' + JSON.stringify(userInfo))
       alert('로그인 성공')
 
@@ -31,14 +40,20 @@ export default createStore({
       }
     },
     loginError (state) {
+      state.userInfo = null
       state.isLogin = false
       state.isLoginError = true
+      state.articleInfo = {}
       alert('사번 또는 비밀번호가 틀렸습니다.')
     },
     logout (state) {
+      state.userInfo = null
       state.isLogin = false
       state.isLoginError = false
-      state.userInfo = null
+      state.articleInfo = {}
+    },
+    mutateArticleInfo (state, articleInfoObj) {
+      state.articleInfo = articleInfoObj
     }
   },
   actions: {
@@ -52,7 +67,7 @@ export default createStore({
       axios
         .post('http://133.186.212.200:8080/loginOk.do', loginObj)
         .then((res) => {
-          // console.log("res JSON : " + JSON.stringify(res.data))
+          console.log("res JSON : " + JSON.stringify(res.data))
           if (res.data.RESULT === 'SUCCESS') {
             commit('loginSuccess', res.data)
           } else {
@@ -62,12 +77,25 @@ export default createStore({
         .catch(() => {
           alert('예기치 않은 오류입니다. 관리자에게 문의하세요')
         })
+    },
+    logout ({ commit }) {
+      commit('logout')
+      console.log('logout')
+      alert('logout')
+      router.push({ name: 'login' })
+    },
+    storeArticleInfo ({ commit }, articleInfoObj) {
+      commit('mutateArticleInfo', articleInfoObj)
+    },
+    removeArticleInfo ({ commit }) {
+      let emptyArticleInfo = {
+        title: '',
+        category: '',
+        user_id: '',
+        create_date: '',
+        content: ''
+      }
+      commit('mutateArticleInfo', emptyArticleInfo)
     }
   },
-  logout ({ commit }) {
-    commit('logout')
-    console.log('logout')
-    alert('logout')
-    router.push({ name: 'login' })
-  }
 })

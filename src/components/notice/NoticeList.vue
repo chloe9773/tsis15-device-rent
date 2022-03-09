@@ -24,13 +24,13 @@
           <th class="v-middle">작성일</th>
         </thead>
         <tbody class="f-13 t-center">
-          <tr class="bb-1 cursor" :key="index" v-for="(value,index) in articles" @click="goToPage('read', value.notice_id)">
+          <tr class="bb-1 cursor" :key="index" v-for="(value,index) in articles" @click="goToPage('read', index)">
             <td class="w-10">
               <div> {{ value.notice_id }} </div>
             </td>
             <td>{{ value.title }}</td>
             <td class="w-15">{{ value.user_id }}</td>
-            <td class="w-15">{{ value.create_date.substr(0,10) }}</td>
+            <td class="w-15">{{ value.create_date.slice(0,10) }}</td>
           </tr>
         </tbody>
       </table>
@@ -53,6 +53,7 @@
 <script>
 import axios from 'axios'
 import PageBtn from '@/components/table/PageBtn.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'NoticeList',
@@ -64,14 +65,14 @@ export default {
           value: 'title',
           expression: '제목'
         },
-        {
-          value: 'name',
-          expression: '작성자'
-        },
-        {
-          value: 'content',
-          expression: '내용'
-        }
+        // {
+        //   value: 'name',
+        //   expression: '작성자'
+        // },
+        // {
+        //   value: 'content',
+        //   expression: '내용'
+        // }
       ],
       searchCategoryOptionValue: 'title', // initial option value
       classification: 'notice', // use api http://133.186.212.200:8080/${classification}/...
@@ -84,16 +85,29 @@ export default {
     }
   },
   methods: {
-    goToPage (pageCategory, noticeId) {
-      this.$router.push({
-        name: 'notice-board',
-        params: {
-          category: pageCategory,
-          noticeId: noticeId
+    // 페이지 전환시, store에 저장하여 데이터 전달 (형제 컴포넌트간 전달)
+    ...mapActions(['storeArticleInfo', 'removeArticleInfo']),
+    goToPage (pageCategory, index) {
+      if (index === null || (index >= 0 && index < 10)) {
+        if (index === null) {
+          // 'write'로 가는 경우 store의 글 정보 삭제(초기화)
+          this.removeArticleInfo()
+        } else {
+          // 'read'로 가는 경우 store에 글 정보 저장
+          this.storeArticleInfo(this.articles[index])
         }
-      })
+        this.$router.push({
+          name: 'notice-board',
+          params: {
+            category: pageCategory
+          }
+        })
+      } else {
+        // index 예외처리
+        alert("페이지를 불러오는 데 실패했습니다.")
+        this.$router.go(0)
+      }
     },
-
     getDataByBtn (classification, keyword, page, searchCategoryOptionValue) {
       let apiUrl = ''
       // 현재 api에 'title' 검색 밖에 구현되어있지 않기 때문에, 강제 지정
