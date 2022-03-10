@@ -34,39 +34,16 @@
       <button class="active-btn" @click="goPreviousPage()">글목록</button>
       <button class="active-btn" @click="goWritePage(purpose='write')">글쓰기</button>
       <!-- 수정/삭제는 admin 권한이 있는 사람만 가능 (admin 권한이 있으면 다른사람이 쓴 글도 수정/삭제 가능)-->
-      <button v-if="role == 1" class="active-btn" @click="goWritePage(purpose='update')">수정</button>
-      <button v-if="role == 1" class="active-btn" @click="deletePost()">삭제</button>
+      <button v-if="role == 2" class="active-btn" @click="goWritePage(purpose='update')">수정</button>
+      <button v-if="role == 2" class="active-btn" @click="deletePost()">삭제</button>
     </div>
   </div>
-  <p> - for test -</p>
-  <p>>>> categoryId : {{ categoryId }}</p>
-  <p>>>> Auth level(aka "ROLE") : {{ role }}</p>
-  <p>>>> typeof role : {{ typeof role }}</p>
-  <p>>>> $store.state.articleInfo : </p>
-  <p>{{ JSON.stringify($store.state.articleInfo) }}</p>
-  <p>>>> value of checkbox : {{ category }}</p>
-  <p>>>> typeof category : {{ typeof category }}</p>
-  <p>>>>  is category null? : {{ category === null  }}</p>
-  <p>>>>  category == '' : {{ category == '' }}</p>
-  <br/>
-  <br/>
-  <p>★ post(create,update) 요청시 필요한 값 5가지</p>
-  <p>>>> title : {{ title }}</p>
-  <p>>>> category : {{ category }}</p>
-  <p>>>> writer : {{ writer }}</p>
-  <p>>>> content : {{ content }}</p>
-  <p>>>> notice_id : {{ notice_id }}</p>
-  <br/>
-  <br/>
-  <p>>>> create_date : {{ create_date }}</p>
 </template>
 
 <script>
 import store from '@/store'
 import axios from 'axios'
-import router from '@/router'
 import { mapActions } from 'vuex'
-
 export default {
   name: 'NoticeWrite',
   data () {
@@ -85,7 +62,7 @@ export default {
     },
     // 로그인한 계정의 권한
     role() {
-      return store.state.userInfo.ROLE
+      return this.$cookies.get("user_role")
     }
   },
   methods: {
@@ -101,7 +78,6 @@ export default {
       }
       // if (this.category === true)
       //   noticeInfoObj.category = 'notice'
-
       if (noticeInfoObj.title === null || noticeInfoObj.title == '') {
         alert("제목을 입력해주세요.")
       } else if (noticeInfoObj.content === null || noticeInfoObj.content == '') {
@@ -110,7 +86,6 @@ export default {
       axios
         .post('http://133.186.212.200:8080/notice/', noticeInfoObj)
         .then((res) => {
-          console.log(JSON.stringify(res))
           this.$router.push({ name: 'notice-board', params: { category: 'list' } })
         })
         .catch(() => {
@@ -122,7 +97,6 @@ export default {
       axios
         .delete(`http://133.186.212.200:8080/notice/${this.notice_id}`)
         .then((res) => {
-          console.log(JSON.stringify(res))
           this.$router.push({ name: 'notice-board', params: { category: 'list' } })
         })
         .catch(() => {
@@ -138,7 +112,7 @@ export default {
         this.removeArticleInfo()
         this.title = ''
         this.category = ''
-        this.writer = store.state.userInfo.NAME
+        this.writer = this.$cookies.get("user_name")
         this.create_date = ''
         this.content = ''
         this.notice_id = ''
@@ -150,44 +124,6 @@ export default {
         }
       })
     }
-  //   postArticle (article_info) {
-  //     // 카테고리 notice 강제로 박아주기 
-  //     // if (article_info.category == true) article_info.category = 'category'
-  //     if(type == 1) {
-  //       article_info.category = 'notice'
-  //       article_info.user_id = '홍길동'
-  //     } else {
-  //       article_info.notice_id = notice_id.value
-  //     }
-  //     // user_id 추가필요
-  //     // articleObj.NAME = store.state.userInfo.NAME-
-
-  //     // title, content 공백 체크
-  //     if(article_info.title == null || article_info.content == null) alert("제목 또는 내용을 입력해주세요.")
-  //     else {
-  //       axios
-  //       .post('http://133.186.212.200:8080/notice', article_info)
-  //       .then((res) => {
-  //         console.log(JSON.stringify(res))
-  //         router.push({ path: '/notice-board/list'})
-  //       })
-  //       .catch((error) => {
-  //         alert('등록에 오류가 발생하였습니다. 잠시 후 다시 시도하여주세요.')
-  //       })
-  //     }
-  //  },
-
-  //  toModify() {
-  //    $("#title").val(title.value)
-  //    $("#title").attr('readonly', false)
-  //    $("#type").val(2)
-     
-  //    // notice_id 들어오면 바인딩 아래
-  //   // $("#notice_id").val(notice_id.value)
-  //    $("#content").val(content.value)
-  //    $("#content").attr('readonly', false)
-
-  //  }
   },
   mounted () {
     this.title = store.state.articleInfo.title
@@ -195,7 +131,7 @@ export default {
     if (this.$route.params.category == 'read') {
       this.writer = store.state.articleInfo.user_id
     } else if (this.$route.params.category == 'write') {
-      this.writer = store.state.userInfo.NAME
+      this.writer = this.$cookies.get("user_name")
     } else {
       alert('페이지 오류(category)')
       this.removeArticleInfo()

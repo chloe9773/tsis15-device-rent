@@ -53,7 +53,7 @@ export default {
           this.category = JSON.stringify(res.data.CATEGORY)
         })
         .catch(() => {
-          console.log('글 읽기 오류')
+          alert('글 읽기 오류')
         })
     }
   }

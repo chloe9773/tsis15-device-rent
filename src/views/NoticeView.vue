@@ -22,8 +22,8 @@ export default {
     NoticeRead,
     NoticeWrite
   },
-    // 예외처리 : categoryId가 'read' or 'write'가 아닌 경우
   mounted () {
+    // 예외처리 : categoryId가 'read' or 'write'가 아닌 경우
     if (this.$route.params.category != 'list' && this.$route.params.category != 'read' && this.$route.params.category != 'write') {
       alert('없는 페이지 입니다.')
       this.$router.go(-1)

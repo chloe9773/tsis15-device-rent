@@ -1,17 +1,10 @@
 <template>
   <div class="main-content-admin w-70 m-auto">
-      <!-- <p> - for test - </p>
-      <p>searchCategoryOptionValue: {{ searchCategoryOptionValue }}</p>
-      <p>classification: {{ classification }}</p>
-      <p>keyword: {{ keyword }}</p>
-      <p>typeof keyword: {{ typeof keyword }}</p> -->
     <div class="table-title mb-20 d-flex space-between w-100">
       <select id="notice-search-category" name="notice-search-category" class="p-5 w-15" v-model="searchCategoryOptionValue">
         <option :key="index" v-for="(option,index) in searchCategoryOptions" :value="option.value">{{ option.expression }}</option>
       </select>
       <div class="input-wrap p-5 b-1 w-80">
-        <!-- <input v-if="keyword != 'noData'" type="text" class="" maxlength="50" v-model="keyword"/>
-        <input v-else type="text" class="" maxlength="50" placeholder="" v-model="keyword"/> -->
         <input type="text" class="" maxlength="50" v-model="keyword"/>
         <button class="cancel-btn float-r mr-5" @click="getDataByBtn(classification, keyword, 0, searchCategoryOptionValue)">search</button>
       </div>
@@ -27,11 +20,11 @@
         <tbody class="f-13 t-center">
           <tr class="bb-1 cursor" :key="index" v-for="(value,index) in articles" @click="goToPage('read', index)">
             <td class="w-10">
-              <div> {{ value.notice_id }} </div>
+              <div> {{ index + 1 + (currPage - 1) * 10 }} </div>
             </td>
             <td>{{ value.title }}</td>
             <td class="w-15">{{ value.user_id }}</td>
-            <td class="w-15">{{ value.create_date.slice(0,10) }}</td>
+            <td class="w-15">{{ utcToKst(value.create_date) }}</td>
           </tr>
         </tbody>
       </table>
@@ -104,8 +97,7 @@ export default {
           }
         })
       } else {
-        // index 예외처리
-        alert("페이지를 불러오는 데 실패했습니다.")
+        alert("페이지를 불러오는 데 실패했습니다. (인덱스 에러)")
         this.$router.go(0)
       }
     },
@@ -113,7 +105,6 @@ export default {
       let apiUrl = ''
       // 현재 api에 'title' 검색 밖에 구현되어있지 않기 때문에, 강제 지정
       searchCategoryOptionValue = 'title'
-
       if (page < 1) {
         page = 1
       } else if (page > this.pages) {
@@ -125,7 +116,6 @@ export default {
         apiUrl = `http://133.186.212.200:8080/${classification}/${keyword}/${page}`
       else
         alert('형식에 맞지 않는 검색어 입니다.')
-
       if (searchCategoryOptionValue == 'title') {
         axios
           .get(apiUrl)
@@ -139,11 +129,15 @@ export default {
             }
             this.currPage = page
             this.pages = res.data.pages
-            console.log('' + JSON.stringify(res.data))
           })
       } else {
         alert('검색 카테고리 선택에서 문제가 발생했습니다.')
       }
+    },
+    utcToKst(data){
+      const kst = moment(data,"YYYY-MM-DDTHH:mm:ssZ")
+      const result = kst["_d"];
+      return moment(result).format('YYYY-MM-DD')
     }
   },
   created () {
@@ -153,10 +147,9 @@ export default {
         this.articles = res.data.list
         this.pageList = res.data.navigatepageNums
         this.pages = res.data.pages
-        console.log(JSON.stringify(res.data))
       })
       .catch(() => {
-        console.log('글 읽기 오류')
+        alert('글 읽기 오류')
       })
   },
   components: {
