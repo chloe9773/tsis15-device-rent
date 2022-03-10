@@ -39,8 +39,16 @@
                             <input type="text" id="price" name="price" v-model="price" class="w-70" tabindex="6">
                         </div>
                         <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">상태 :</span>
+                            <input type="text" id="status" name="status" v-model="status" class="w-70" tabindex="7">
+                        </div>
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
+                            <span class="item-title mr-5">구매처 :</span>
+                            <input type="text" id="link" name="link" v-model="link" class="w-70" tabindex="8">
+                        </div>
+                        <div class="item-wrap b-1 p-5 border-radius-2 mb-5 w-90">
                             <span class="item-title mr-5">메모 :</span>
-                            <textarea id="memo" name="memo" v-model="memo" class="v-top w-80" tabindex="7"></textarea>
+                            <textarea id="memo" name="memo" v-model="memo" class="v-top w-80" tabindex="9"></textarea>
                         </div>
                     </form>
                 </div>
@@ -54,13 +62,33 @@
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
   name: 'AddDevice',
+  data() {
+      return {
+          serialnum:"",
+          category:"",
+          brand:"",
+          os:"",
+          name:"",
+          price:"",
+          memo:"",
+          link:"",
+          status:""
+      }
+  },
   methods: {
     addDevice () {
-        let device = $("#device-info").serialize()
+        let device = {}
+        device.serialnum = this.serialnum
+        device.category = this.category
+        device.brand = this.brand
+        device.os = this.os
+        device.name = this.name
+        device.price = this.price
+        device.status = this.status
+        device.link = this.link
+        device.memo = this.memo
 
         if(this.price != undefined && !$.isNumeric(this.price)) {
             alert("가격은 숫자만 입력해주세요.");
@@ -70,10 +98,10 @@ export default {
             alert("공백칸을 채워주세요.")
         }
         else {
-            axios
-            .get('http://133.186.212.200:8080/')
+            this.axios
+            .post('/item', device)
             .then((res) => {
-                console.log(res)
+                alert("단말기가 등록되었습니다.")
             })
             .catch((error) => {
                 alert("단말기 등록에 실패했습니다. 잠시 후 다시 시도해주세요.")
