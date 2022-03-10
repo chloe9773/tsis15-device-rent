@@ -1,78 +1,59 @@
 <!-- 어드민 보드 - 서브 메뉴 - 디바이스 추가 -->
 <template>
-    <DeviceDetailLog v-if="openToggle === true" v-bind:item="info"/>
-    <div class="right-content b-1 p-35 w-60 border-radius-2">
-        <TableTop>
-            <template #table-top-select>
-                <select class="p-5 w-20" id="select" name="select" v-model="keyword">
-                    <option v-for="opt in searchKey" :value="opt.value" v-bind:key="opt" :selected="opt.value === 'user_id'">{{opt.text}}</option>
-                </select>
-            </template>
-            <template #table-top-search>
-                <div class="input-wrap p-5 b-1 w-70 pos-r">
-                <input type="text" name="search-word" id="search-word" class="pos-a"  style="top:24%"/>
-                <button class="float-r mr-5 cancel-btn" v-on:click="getSearch(keyword)">검색</button>
-                </div>
-            </template>
-        </TableTop>
-        <div class="table-wrap">
-            <table class="table w-100" id="device-list-table">
-                <thead class="f-14 font-700 bb-2 bt-2">
-                    <th class="p-20">종류</th>
-                    <th class="v-middle">브랜드</th>
-                    <th class="v-middle">단말기명</th>
-                    <th class="v-middle">대여 현황</th>
-                </thead>
-                <tbody class="f-13 t-center" id="ttt">
-                <tr :key="index" v-for="(item,index) in list" class="bb-1 cursor tabletr" v-on:click="getLogs(item);">
-                    <td class="w-15" id="category" >{{item.category}}</td>
-                    <td class="w-15" id="brand" >{{item.brand}}</td>
-                    <td id="name" >{{item.name}}</td>
-                    <td class="w-25 grn" id="status"> {{item.status}}</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+  <DeviceDetailLog v-if="openToggle === true" v-bind:item="info"/>
+  <div class="right-content b-1 p-35 w-60 border-radius-2">
+    <div class="table-wrap">
+      <table class="table w-100" id="device-list-table">
+        <thead class="f-14 font-700 bb-2 bt-2">
+          <th class="p-20">종류</th>
+          <th class="v-middle">브랜드</th>
+          <th class="v-middle">단말기명</th>
+          <th class="v-middle">대여 현황</th>
+        </thead>
+        <tbody class="f-13 t-center" id="ttt">
+        <tr :key="index" v-for="(item,index) in list" class="bb-1 cursor tabletr" v-on:click="getLogs(item);">
+          <td class="w-15" id="category" >{{item.category}}</td>
+          <td class="w-15" id="brand" >{{item.brand}}</td>
+          <td id="name" >{{item.name}}</td>
+          <td class="w-25 grn" id="status"> {{item.status}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <PageBtn
+        v-bind:pageList="pageList"
+        v-bind:currPage="currPage"
+        v-bind:pages="pages"
+        v-bind:keyword="keyword"
+        v-bind:searchCategoryOptionValue="searchCategoryOptionValue"
+        v-bind:classification="classification"
+        @getDataByBtn="getDataByBtn"
+        />
     </div>
+  </div>
 </template>
 
 <script>
-import TableTop from '@/components/table/TableTop.vue'
+import PageBtn from '@/components/table/PageBtn.vue'
 import DeviceDetailLog from '@/components/admin/DeviceDetailLog.vue'
 
 export default {
   name: 'AdminView',
-  created: function(){
-    this.axios
-        .get('/item/paging/1')
-        .then((res) => {
-            console.log(res)
-            this.list = res.data.list
-        }).catch((res) => {
-            console.log(res)
-        })
-  },
   components: {
     DeviceDetailLog,
-    TableTop
+    PageBtn
   },
   data() {
     return {
-      searchKey: [
-        {
-          text: "단말기명",
-          value: "user_id"
-        },
-        {
-          text: "성명",
-          value: "name"
-        },
-        {
-          text: "부서명",
-          value: "dept_name"
-        }
-      ],
-      list: [],
+      classification: 'item', // use api http://133.186.212.200:8080/${classification}/...
+
+      currPage: 1, // current page
+      pages: 1, // total pages
+      keyword: null, // search keyword
+      pageList: [], // list of page numbers displayed on paging box
+      // 테이블에 출력될 정보
+      list: [], // list
+      keyword: "",
+
       selected: [],
       slides: document.getElementsByClassName('tabletr'),
       item_id: [],
@@ -84,12 +65,50 @@ export default {
       pagnum: 1,
       slist: [],
       test: [],
-      keyword: "",
       openToggle: false,
       info: {}
     }
   },
+  created () {
+    this.axios
+        .get('/item/paging/1')
+        .then((res) => {
+          console.log(JSON.stringify(res))
+          this.list = res.data.list
+          this.pageList = res.data.navigatepageNums
+          this.pages = res.data.pages
+        }).catch((res) => {
+            alert('목록을 불러올 수 없습니다.')
+        })
+  },
   methods: {
+    getDataByBtn (classification, keyword, page, searchCategoryOptionValue) {
+      let apiUrl = ''
+      if (page < 1) {
+        page = 1
+      } else if (page > this.pages) {
+        page = this.pages
+      }
+      if (keyword === null || keyword == '')
+        apiUrl = `/${classification}/paging/${page}`
+      else if (typeof keyword == "string")
+        apiUrl = `/${classification}/${keyword}/${page}`
+      else
+        alert('형식에 맞지 않는 검색어 입니다.')
+      this.axios
+        .get(apiUrl)
+        .then((res) => {
+          this.list = res.data.list
+          this.pageList = res.data.navigatepageNums
+          if (keyword === null || keyword == '') {
+            this.keyword = ""
+          } else {
+            this.keyword = keyword
+          }
+          this.currPage = page
+          this.pages = res.data.pages
+        })
+    },
     getLogs(device_info) {
       this.info = device_info;
       this.openToggle = true

@@ -113,7 +113,7 @@ export default {
         alert('형식에 맞지 않는 검색어 입니다.')
 
       let is_numeric = /^[0-9]+$/
-      if (!is_numeric.test(keyword)) {
+      if (!(keyword !== null) && !(keyword !== '') && !is_numeric.test(keyword)) {
         alert("숫자만 입력 가능합니다.")
       } else {
         if (searchCategoryOptionValue == 'user_id') {
