@@ -4,14 +4,20 @@
     <div class="left-menu b-1 cursor">
       <!-- <div v-bind:class="[{'d-none': role < 3}, {'p-20 menu cursor': role >= 3}]"> -->
         <div v-bind:class="[{'left-menu-item p-20 t-center cursor active':categoryId=='admin'}, {'left-menu-item p-20 t-center cursor bb-1':categoryId!='admin'}]">
-          <router-link to="/admin-board/admin">user</router-link>
+          <router-view :key="$route.fullPath">
+            <router-link to="/admin-board/admin">user</router-link>
+          </router-view>
         </div>
       <!-- </div> -->
       <div v-bind:class="[{'left-menu-item p-20 t-center cursor active':categoryId=='add-device'},{'left-menu-item p-20 t-center cursor bb-1':categoryId!='add-device'}]">
-        <router-link to="/admin-board/add-device">device</router-link>
+        <router-view :key="$route.fullPath">
+          <router-link to="/admin-board/add-device">device</router-link>
+        </router-view>
       </div>
       <div v-bind:class="[{'left-menu-item p-20 t-center cursor active':categoryId=='rent-list'},{'left-menu-item p-20 t-center cursor':categoryId!='rent-list'}]">
-        <router-link to="/admin-board/rent-list">rent</router-link>
+        <router-view :key="$route.fullPath">
+          <router-link to="/admin-board/rent-list">rent</router-link>
+        </router-view>
       </div>
     </div>
   </div>

@@ -7,19 +7,27 @@
     <div class="main-nav d-flex space-between bg-highlight white f-18 font-700 mb-50">
       <div class="nav-left d-flex space-between">
         <div class="p-20 menu">
-          <router-link to="/device-list-board">단말기 목록</router-link>
+          <router-view :key="$route.fullPath">
+            <router-link to="/device-list-board">단말기 목록</router-link>
+          </router-view>
         </div>
         <div class="p-20 menu">
-          <router-link to="/approval-list-board">결재문서함</router-link>
+          <router-view :key="$route.fullPath">
+            <router-link to="/approval-list-board">결재문서함</router-link>
+          </router-view>
         </div>
         <div class="p-20 menu">
-          <router-link to="/notice-board/list">공지사항</router-link>
+          <router-view :key="$route.fullPath">
+            <router-link to="/notice-board/list">공지사항</router-link>
+          </router-view>
         </div>
       </div>
       <div class="nav-right d-flex space-between bg-highlight white f-18 font-700">
         <div v-bind:class="[{'p-20 menu d-none': role <= 1}, {'p-20 menu cursor': role >= 2}]"> 
           <!-- this.$cookies.get("user_role") -->
-          <router-link to="/admin-board/admin">관리자</router-link>
+          <router-view :key="$route.fullPath">
+            <router-link to="/admin-board/admin">관리자</router-link>
+          </router-view>
         </div>
         <div class="p-20 menu cursor" v-on:click.prevent="logout">
           <span>로그아웃</span>
