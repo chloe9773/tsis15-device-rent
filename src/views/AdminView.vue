@@ -21,6 +21,11 @@ import AdminDeviceTable from '@/components/admin/AdminDeviceTable.vue'
 
 // 라우터 파람 출력
 export default {
+  created() {
+    // if(this.$cookies.get("user_id") == undefined || this.$cookies.get("user_id") == null || this.$cookies.get("user_id") == "") this.$router.push("/")
+    if(this.$cookies.get("user_role") < 1) this.$router.push("/")
+    else console.log(this.$cookies.get("user_id"))
+  },
   computed: {
     categoryId () {
       return this.$route.params.category
