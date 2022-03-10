@@ -28,8 +28,6 @@
   </div>
 </template>
 <script>
-import axios from 'axios'
-
 export default {
   name: 'NoticeRead',
   data () {
@@ -43,8 +41,8 @@ export default {
   },
   methods: {
     getArticle (noticeId) {
-      axios
-        .get(`http://133.186.212.200:8080/document/${noticeId}`)
+      this.axios
+        .get(`/document/${noticeId}`)
         .then((res) => {
           this.title = JSON.stringify(res.data.TITLE)
           this.name = JSON.stringify(res.data.NAME)

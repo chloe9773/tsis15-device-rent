@@ -175,7 +175,7 @@ export default {
         // ids: [1,2]
         // r_id: this.reviewer_id
       // }
-      var url = `http://133.186.212.200:8080/document/save/${this.user_id}/${this.reviewer_id}` ;
+      var url = `/document/save/${this.user_id}/${this.reviewer_id}` ;
       // 관리자명, 부서, 임대시작일 공란  
       this.axios.post(url,ids)
       .then(function(res) {
@@ -209,7 +209,7 @@ export default {
         // ids: [1,2]
         // r_id: this.reviewer_id
       // }
-      var url = `http://133.186.212.200:8080/document/save/${this.$cookies.get('user_id')}/${this.reviewer_id}` ;
+      var url = `/document/save/${this.$cookies.get('user_id')}/${this.reviewer_id}` ;
       // axios 전송
       this.axios.post(url,ids)
       .then(function(res) {

@@ -34,7 +34,7 @@
                 </div>
                 <div class="item-wrap">
                     <label class="font-700 mr-5">구매처 : </label>
-                    <a href="https:www.naver.com" class="underline" target="_blank">사이트로 바로 이동</a>
+                    <a :href="this.item.link" class="underline" target="_blank">사이트로 바로 이동</a>
                     <!-- <a v-bind:href="this.item.link" target="_blank">사이트로 바로 이동</a> -->
                 </div>
                 <div class="item-wrap">
@@ -50,8 +50,8 @@
     </template>
     <template #modal-content-bottom>
         <div class="device-status-list">
-                <div class="table-wrap">
-                    <table>
+                <div class="table-wrap w-100">
+                    <table class="w-100">
                         <thead class="f-14 font-700 bb-2 bt-2">
                             <th class="v-middle">임대시작일</th>
                             <th class="v-middle">부서</th>

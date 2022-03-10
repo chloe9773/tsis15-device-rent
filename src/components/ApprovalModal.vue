@@ -6,7 +6,7 @@
       <input type="hidden" id="reviewed_status" :value="document.document.reviewed_status">
       <input type="hidden" id="approval_status" :value="document.document.approval_status">
       <div class="b-1">
-        <div class="form-head d-flex space-between mb-2">
+        <div id="test" class="form-head d-flex space-between mb-2">
           <div class="form-title f-24 font-700 p-20 t-center w-65" style="padding-top:40px;">단말기 임대 품의서</div>
           <div class="form-approval-wrap d-flex">
             <div class="form-approval-title b-1 f-12 bg-gray font-700 p-20">결재</div>
@@ -54,7 +54,7 @@
               <td class="table-title">일련번호</td>
               <td>{{document.document.serialnum}}</td>
               <td class="table-title">작성일</td>
-              <td>{{document.document.requestdate}}</td>
+              <td>{{utcToKst(document.document.requestdate)}}</td>
             </tr>
             <tr class="space"></tr>
             <tr>
@@ -87,9 +87,9 @@
                   <p class="font-700 mb-2">- 임대 기본 규정</p>
                       <p class="t-2em mb-2">- 대여기간 1개월 (휴일 포함, 연장 최대 달)</p>
                       <p class="t-2em mb-2">- 대여기간 연장은 대기 수요가 없는 상황에 한함</p>
-                      <P class="t-2em mb-2">- 반납 지연 , 연체일 상당 일자 만큼 재대여 불가</P>
-                      <P class="t-2em mb-2">- 고장 및 분실 시 해당 단말기 배상</P>
-                      <P class="t-4em mb-2">- 충전기 등 소모성 자체는 미포함</p>
+                      <p class="t-2em mb-2">- 반납 지연 , 연체일 상당 일자 만큼 재대여 불가</p>
+                      <p class="t-2em mb-2">- 고장 및 분실 시 해당 단말기 배상</p>
+                      <p class="t-4em mb-2">- 충전기 등 소모성 자체는 미포함</p>
                       <p class="t-2em red mb-2">- 1회 / 최대 5대 임개 가능 (다른 단말기 필요 시, 반납 후 재 임대 필dy)</p>
                 </div>
                 <textarea name="memo" id="memo" cols="30" rows="10" class="w-100" tabindex="4" :value="document.document.reason_for_rejection"></textarea>
@@ -104,30 +104,24 @@
           <button class="cancel-btn mr-5" v-on:click="toggleModal('approval', 0)">취소</button>
           <button class="active-btn">등록</button>
       </div>
-      <div id="statusBtn" class="form-btn-grp mt-50">
-          <!-- <button id="extensionBtn" class="active-btn" v-on:click="extendRent(document.document)">연장하기</button> -->
+      <div id="statusBtn" v-bind:class="[{'form-btn-grp mt-50 d-none' : document.document.drafted_user_id == this.$cookies.get('user_id')},{'form-btn-grp mt-50 d-none' : (document.document.reviewed_user_id == this.$cookies.get('user_id') && (document.document.reviewed_status == '승인' || document.document.reviewed_status == '반려'))},{'form-btn-grp mt-50 d-none' : (document.document.approval_user_id == this.$cookies.get('user_id') && (document.document.approval_status == '승인' || document.document.approval_status == '반려'))}]">
+          <button id="extensionBtn" v-bind:class="[{'d-none' : (document.document.approval_status != '승인' && document.document.drafted_user_id != this.$cookies.get('user_id'))}, {'actvie_btn':(document.document.approval_status == '승인' && document.document.drafted_user_id == this.$cookies.get('user_id'))}]" v-on:click="extendRent(document.document)">연장하기</button>
           <!-- <div v-bind:class="[{'p-20 menu d-none': role <= 1}, {'p-20 menu cursor': role >= 2}]">  -->
           <button id="rejectBtn" class="cancel-btn mr-5" v-on:click="updateStatus(document.document.document_id, '반려')">반려</button>
           <button id="confirmBtn" class="active-btn" v-on:click="updateStatus(document.document.document_id, '승인')">승인</button>
       </div>
     </template>
   </Modal>
+  {{this.$cookies.get('user_dept')}}
 </template>
 
 <script>
 import Modal from '@/components/Modal.vue'
 export default {
   computed() {
-    let drafter = document.getElementById("drafter").value
-    let reviewer = document.getElementById("reviewer").value
-    let approval = document.getElementById("approval").value
-    let reviewed_status = document.getElementById("reviewed_status").value 
-    let approval_status = document.getElementById("approval_status").value 
-    let btn = document.getElementById("statusBtn")
-    
-    if(this.$cookies.get("user_id")== drafter) btn.classList.add("d-none")
-    else if(this.$cookies.get("user_id") == reviewer && (reviewed_status == '승인' || reviewed_status == '반려')) btn.classList.add("d-none")
-    else if(this.$cookies.get("user_id") == approval && (approval_status == '승인' || approval_status == '반려')) btn.classList.add("d-none")
+    // if(this.$cookies.get("user_id")=== drafter) btn.classList.add("d-none")
+    // else if(this.$cookies.get("user_id") == reviewer && (reviewed_status == '승인' || reviewed_status == '반려')) btn.classList.add("d-none")
+    // else if(this.$cookies.get("user_id") == approval && (approval_status == '승인' || approval_status == '반려')) btn.classList.add("d-none")
   },
   components: {
     Modal
@@ -152,29 +146,31 @@ export default {
         .catch((error) => {
             alert("잠시 후 다시 시도해주세요.")
         })
-    }
+    },
     
-    // extendRent(document) {
-    //   this.axios
-    //     .post('/item/')
-    //     .then((res) => {
-    //       if(res.status == 200) {
-    //         let today = new Date()
-    //         if ('대여 가능한 목록') {
-    //           // 리스트에 담고
-    //           // 바인드
-    //           // 결재 - 검토자 select d-none 제거
-    //           // 결재 라인 나머지 다 날리고
-    //           // 단말기명 변경
-    //         } 
-    //       }
-    //       console.log(res.data)
-    //       this.docs = res.data
-    //     }).catch((res) => {
-    //         console.log(res)
-    //     })
-    //   console.log(document)
-    // }
+    extendRent(document) {
+      //console.log(document.document_id)
+      this.axios
+        .get(`/item/extend/${document.document_id}`)
+        .then((res) => {
+          if(res.status == 200) {
+            let tmp_list = []
+            for(let i = 0; i < res.data.length; i++) {
+              tmp_list.push(res.data[i].item_id)
+            }
+            //this.toggleModal('approval',0)
+          }
+          console.log(res.data)
+          this.docs = res.data
+        }).catch((res) => {
+            console.log(res)
+        })
+    },
+    utcToKst(data){
+      const kst = moment(data,"YYYY-MM-DDTHH:mm:ssZ")
+      const result = kst["_d"];
+      return moment(result).format('YYYY-MM-DD')
+    }
   }
 }
 </script>
