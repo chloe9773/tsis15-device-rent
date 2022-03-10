@@ -3,13 +3,13 @@
   <div class="right-content b-1 p-35 w-60 border-radius-2">
     <TableTop>
       <template #table-top-select>
-        <select class="p-5 w-20" id="select" name="select" v-model="keyword">
-          <option v-for="opt in searchKey" :value="opt.value" v-bind:key="opt" :selected="opt.value === 'user_id'">{{opt.text}}</option>
+        <select class="p-5 w-20" id="select" name="select" v-model="keyword" required>
+          <option v-for="opt in searchKey" :value="opt.value" v-bind:key="opt" :selected="opt.value=='user_id'">{{opt.text}}</option>
         </select>
       </template>
       <template #table-top-search>
-        <div class="input-wrap p-5 b-1 w-70">
-          <input type="text" name="search-word" id="search-word" class="" />
+        <div class="input-wrap p-5 b-1 w-70 pos-r">
+          <input type="text" v-model="keyword" name="search-word" id="search-word" class="pos-a" placeholder="사번을 입력해주세요." maxlength="8" style="top:24%"/>
           <button class="float-r mr-5 cancel-btn" v-on:click="getSearch(keyword)">검색</button>
         </div>
       </template>
@@ -25,29 +25,39 @@
           <th class="v-middle">관리자 지정</th>
         </thead>
         <tbody class="f-13 t-center">
-          <tr class="bb-1" onclick="">
-            <td class="w-15">28108386</td>
-            <td class="w-10">박정화</td>
-            <td>소속어쩌구저쩌구</td>
-            <td class="w-15">부서웅앵</td>
-            <td class="w-10">사원</td>
+          <tr v-for="user in users" v-bind:key="user" class="bb-1">
+            <td class="w-15">{{user.user_id}}</td>
+            <td class="w-10">{{user.name}}</td>
+            <td>{{user.dept_name}}</td>
+            <td class="w-15">{{user.dept_name}}</td>
+            <td class="w-10">{{user.position}}</td>
             <td class="w-15">
-              <input type="checkbox" /> <!-- 데이터 바인딩 후 status에 따라 check 적용 및 버튼 이벤트 추가 -->
+              <input type="checkbox" :value="user.user_id" @change="setAdmin(user.user_id, user.role, user.name)" :checked="user.role == 2"/> <!-- 데이터 바인딩 후 status에 따라 check 적용 및 버튼 이벤트 추가 -->
             </td>
           </tr>
         </tbody>
       </table>
+      <PageBtn
+        v-bind:pageList="pageList"
+        v-bind:currPage="currPage"
+        v-bind:pages="pages"
+        v-bind:keyword="keyword"
+        @getDataByBtn="getDataByBtn"
+        />
     </div>
   </div>
 </template>
 
 <script>
 import TableTop from '@/components/table/TableTop.vue'
+import PageBtn from '@/components/table/PageBtn.vue'
+
 // 테이블 상단 셀렉트 + 인풋 + 버튼 공통 사용 분리
 export default {
   name: 'AdminView',
   components: {
-    TableTop
+    TableTop,
+    PageBtn
   },
   data() {
     return {
@@ -55,21 +65,63 @@ export default {
         {
           text: "사번",
           value: "user_id"
-        },
-        {
-          text: "성명",
-          value: "name"
-        },
-        {
-          text: "부서명",
-          value: "dept_name"
         }
-      ]
+      ],
+      users: [],
+      keyword: ""
     }
   },
+  created () {
+    // /user/${input}/${paging}
+    this.axios
+      .get('/user')
+      .then((res) => {
+        this.users = res.data
+      })
+      .catch((err) => {
+        alert("사용자 목록을 불러오는데 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+      })
+  },
   methods: {
+    // 유저 검색
     getSearch(keyword) {
-      console.log(this.keyword)
+      let is_numeric = /^[0-9]+$/
+      if (!is_numeric.test(keyword)) alert("숫자만 입력 가능합니다.")
+      else {
+        this.axios
+        .get(`/user/${this.keyword}`)
+        .then((res) => {
+          console.log(res)
+          if(res.status != 200) alert("사원 검색에 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.")
+          else {
+            this.users = [res.data]
+            this.keyword = keyword
+          }
+          // this.users = res.data
+        })
+        .catch((err) => {
+          alert("오류가 발생하였습니다. 잠시 후 다시 시도해주세요.")
+        })
+      }
+    },
+
+    // 유저 role 변경
+    setAdmin(id, role, name) {
+      let role_to_be = 2
+
+      if(role  == 2) role_to_be = 1
+      this.axios
+      .put(`/user/up/${id}/${role_to_be}`)
+      .then((res) => {
+        if(res.status != 200) alert("관리자 지정에 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.")
+        else {
+          this.$cookies.set('user_role', role_to_be)
+          alert(`${name}님의 관리자 레벨이 변경되었습니다.`)
+        }
+      })
+      .catch((err) => {
+        alert("관리자 지정에 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.")
+      })
     }
   }
 }
