@@ -18,7 +18,7 @@
                         <div id="" class="approval-sign p-2">
                             <div id="approvalId-before" class="approval-sign p-5 d-none">김진민</div>
                             <select name="" id="approvalIdSelect" class="d-none" style="border-style:none;">
-                            <option v-for="(apprev,index) in this.reviewerlist.data" :key="index" >{{apprev.name}}</option>
+                            <option  v-for="(reviewer,index) in this.reviewerlist.data" :value="reviewer.user_id" :key="index" >{{reviewer.name}}</option>
                             <!-- <option value="김진민">김진민</option>
                             <option value="임건호">임건호</option> -->
                             </select>
@@ -121,7 +121,6 @@ export default {
     this.axios.get(`/user/reviewer/${this.$cookies.get('user_id')}`).then(res => {
       let reviewerlist = []
       this.reviewerlist=res
-      console.log("this.reviewerlist : "+ this.reviewerlist.data[0].name )
     }).catch(res => {
       console.log(res)
     })
@@ -142,13 +141,13 @@ export default {
       ids: [],
       selectedlist: this.selected,
       item_id : this.selected,
-      reviewerlist: [],
-      
+      reviewerlist: {},
+      selstatus: ''
       // 하드코딩
-      user_id: '28107771',
-      name: '황민재',
-      dept_name: '손보서비스팀',
-      reviewer_id: '28108683'
+      // user_id: '28107771',
+      // name: '황민재',
+      // dept_name: '손보서비스팀',
+      // reviewer_id: '28108683'
     }
   },
   methods: {
@@ -162,26 +161,22 @@ export default {
       + "// 임대시작일 : " + this.rentstartdate + "// 아이템명 : " + this.selectedlist[0].name)
       
       let ids = []
+      let approvalIdSelect = document.getElementById('approvalIdSelect')
+      let optionvalue = approvalIdSelect.options[approvalIdSelect.selectedIndex].value
       for (let i = 0 ; i < this.selected.length ; i++) {
-        let selectedItemId = this.selected[i].item_id
-        ids.push({
-          selectedItemId
-        })
+        let item_id = this.selected[i].item_id
+        ids.push(
+          item_id
+        )
       }
-      // !!!!!!!!!!!!!!!!!!! 경로 url수정 필요
-      // var data = {
-        // deviceuser : this.deviceuser,
-        // d_id : this.user_id,
-        // ids: [1,2]
-        // r_id: this.reviewer_id
-      // }
-      var url = `http://133.186.212.200:8080/document/save/${this.user_id}/${this.reviewer_id}` ;
+      
+      var url = `/document/save/${this.$cookies.get('user_id')}/${optionvalue}/티시스-IT사업본부-A072/${this.selstatus}` ;
       // 관리자명, 부서, 임대시작일 공란  
       this.axios.post(url,ids)
       .then(function(res) {
         console.log("넘길 data 확인 : " + JSON.stringify(ids))
         alert("대여기한이 연장되었습니다")
-        // this.$router.go() // 페이지 새로고침
+        this.$router.go() // 페이지 새로고침
       })
       .catch(function() {
         console.error("에러//json형태 : " + JSON.stringify(ids) + "//url : " + url )
@@ -193,31 +188,30 @@ export default {
     //등록버튼클릭
     approvalSubmit: function() {
       let ids = []
+      let approvalIdSelect = document.getElementById('approvalIdSelect')
+      let optionvalue = approvalIdSelect.options[approvalIdSelect.selectedIndex].value
+      
       for (let i = 0 ; i < this.selected.length ; i++) {
         let item_id = this.selected[i].item_id
         ids.push(
           item_id
         )
       }
+      this.selstatus = this.selected[0].status
       console.log("관리자 : " + this.deviceuser + "// 부서 : " + this.userdept 
-      + "// 임대시작일 : " + this.rentstartdate + "// 아이템명 : " + this.selectedlist)
+      + "// 임대시작일 : " + this.rentstartdate + "// 아이템명 : " + this.selectedlist
+      + "// selstatus : " + this.selstatus + "//검토자사번 : " + optionvalue)
       
-      // !!!!!!!!!!!!!!!!!!! 경로 url수정 필요
-      // var data = {
-        // deviceuser : this.deviceuser,
-        // d_id : this.user_id,
-        // ids: [1,2]
-        // r_id: this.reviewer_id
-      // }
-      var url = `http://133.186.212.200:8080/document/save/${this.$cookies.get('user_id')}/${this.reviewer_id}` ;
+     
+      var url = `/document/save/${this.$cookies.get('user_id')}/${optionvalue}/티시스-IT사업본부-A072/${this.selstatus}` ;
       // axios 전송
       this.axios.post(url,ids)
-      .then(function(res) {
+      .then((res) => {
         console.log("넘길 data 확인 : " + JSON.stringify(ids))
         alert("기안문이 등록되었습니다")
         this.$router.go() // 페이지 새로고침
       })
-      .catch(function() {
+      .catch(() => {
         console.error("에러//json형태 : " + JSON.stringify(ids) + "//url : " + url )
       })
       

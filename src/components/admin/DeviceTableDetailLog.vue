@@ -83,10 +83,10 @@ import Modal from '@/components/Modal.vue'
 export default {
   created() {
       this.axios
-          .get('/item/logpaging/1/1')
+          .get(`/item/logpaging/1/${this.devicedetaillist[0].item_id}`)
           .then((res) => {
               this.loglist = res.data.list
-              console.log("loglist : " + this.loglist)
+              
           }).catch((res) => {
               console.log(res)
           })
