@@ -1,14 +1,18 @@
 <template>
   <div class="main-content-admin w-70 m-auto">
-    <div class="table-title mb-20 d-flex space-between w-100">
-      <select id="notice-search-category" name="notice-search-category" class="p-5 w-15" v-model="searchCategoryOptionValue">
-        <option :key="index" v-for="(option,index) in searchCategoryOptions" :value="option.value">{{ option.expression }}</option>
-      </select>
-      <div class="input-wrap p-5 b-1 w-80">
-        <input type="text" class="" maxlength="50" v-model="keyword"/>
-        <button class="cancel-btn float-r mr-5" @click="getDataByBtn(classification, keyword, 0, searchCategoryOptionValue)">search</button>
-      </div>
-    </div>
+    <TableTop>
+      <template #table-top-select>
+        <select id="notice-search-category" name="notice-search-category" class="p-5 w-15" v-model="searchCategoryOptionValue">
+          <option :key="index" v-for="(option,index) in searchCategoryOptions" :value="option.value">{{ option.expression }}</option>
+        </select>
+      </template>
+      <template #table-top-search>
+        <div class="input-wrap p-5 b-1 w-80">
+          <input type="text" class="" maxlength="50" v-model="keyword"/>
+          <button class="cancel-btn float-r mr-5" @click="getDataByBtn(classification, keyword, 0, searchCategoryOptionValue)">search</button>
+        </div>
+      </template>
+    </TableTop>
     <div class="table-wrap">
       <table class="table w-100" style="overflow:auto;">
         <thead class="f-14 font-700 bb-2 bt-2">
@@ -45,12 +49,17 @@
 </template>
 
 <script>
-import axios from 'axios'
+import TableTop from '@/components/table/TableTop.vue'
 import PageBtn from '@/components/table/PageBtn.vue'
 import { mapActions } from 'vuex'
 
+
 export default {
   name: 'NoticeList',
+  components: {
+    TableTop,
+    PageBtn
+  },
   data () {
     return {
       // 검색 옵션 목록 (selectbox)
@@ -74,9 +83,22 @@ export default {
       currPage: 1, // current page
       pages: 1, // total pages
       keyword: null, // search keyword
-      articles: [], // list of all articles
-      pageList: [] // list of page numbers displayed on paging box
+      pageList: [], // list of page numbers displayed on paging box
+      // 테이블에 출력될 정보
+      articles: [] // list of all articles
     }
+  },
+  created () {
+    this.axios
+      .get(`/notice/1`)
+      .then((res) => {
+        this.articles = res.data.list
+        this.pageList = res.data.navigatepageNums
+        this.pages = res.data.pages
+      })
+      .catch(() => {
+        alert('글 읽기 오류')
+      })
   },
   methods: {
     // 페이지 전환시, store에 저장하여 데이터 전달 (형제 컴포넌트간 전달)
@@ -103,21 +125,19 @@ export default {
     },
     getDataByBtn (classification, keyword, page, searchCategoryOptionValue) {
       let apiUrl = ''
-      // 현재 api에 'title' 검색 밖에 구현되어있지 않기 때문에, 강제 지정
-      searchCategoryOptionValue = 'title'
       if (page < 1) {
         page = 1
       } else if (page > this.pages) {
         page = this.pages
       }
       if (keyword === null || keyword == '')
-        apiUrl = `http://133.186.212.200:8080/${classification}/${page}`
+        apiUrl = `/${classification}/${page}`
       else if (typeof keyword == "string")
-        apiUrl = `http://133.186.212.200:8080/${classification}/${keyword}/${page}`
+        apiUrl = `/${classification}/${keyword}/${page}`
       else
         alert('형식에 맞지 않는 검색어 입니다.')
       if (searchCategoryOptionValue == 'title') {
-        axios
+        this.axios
           .get(apiUrl)
           .then((res) => {
             this.articles = res.data.list
@@ -139,21 +159,6 @@ export default {
       const result = kst["_d"];
       return moment(result).format('YYYY-MM-DD')
     }
-  },
-  created () {
-    axios
-      .get('http://133.186.212.200:8080/notice/1')
-      .then((res) => {
-        this.articles = res.data.list
-        this.pageList = res.data.navigatepageNums
-        this.pages = res.data.pages
-      })
-      .catch(() => {
-        alert('글 읽기 오류')
-      })
-  },
-  components: {
-    PageBtn
   }
 }
 </script>

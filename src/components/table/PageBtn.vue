@@ -40,12 +40,12 @@
 <script>
 export default {
   props: {
-    pageList: Array,
-    currPage: Number,
+    classification : String,
     keyword: String,
     pages: Number,
     searchCategoryOptionValue: String,
-    classification : String
+    pageList: Array,
+    currPage: Number
   },
   emits: ['getListBySearchBtn']
 }

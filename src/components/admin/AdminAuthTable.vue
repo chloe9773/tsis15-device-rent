@@ -3,14 +3,14 @@
   <div class="right-content b-1 p-35 w-60 border-radius-2">
     <TableTop>
       <template #table-top-select>
-        <select class="p-5 w-20" id="select" name="select" v-model="keyword" required>
-          <option v-for="opt in searchKey" :value="opt.value" v-bind:key="opt" :selected="opt.value=='user_id'">{{opt.text}}</option>
+        <select id="notice-search-category" name="notice-search-category" class="p-5 w-15" v-model="searchCategoryOptionValue">
+          <option :key="index" v-for="(option,index) in searchCategoryOptions" :value="option.value">{{ option.expression }}</option>
         </select>
       </template>
       <template #table-top-search>
-        <div class="input-wrap p-5 b-1 w-70 pos-r">
-          <input type="text" v-model="keyword" name="search-word" id="search-word" class="pos-a" placeholder="사번을 입력해주세요." maxlength="8" style="top:24%"/>
-          <button class="float-r mr-5 cancel-btn" v-on:click="getSearch(keyword)">검색</button>
+        <div class="input-wrap p-5 b-1 w-80">
+          <input type="text" class="" maxlength="50" v-model="keyword"/>
+          <button class="cancel-btn float-r mr-5" @click="getDataByBtn(classification, keyword, 0, searchCategoryOptionValue)">search</button>
         </div>
       </template>
     </TableTop>
@@ -42,6 +42,8 @@
         v-bind:currPage="currPage"
         v-bind:pages="pages"
         v-bind:keyword="keyword"
+        v-bind:searchCategoryOptionValue="searchCategoryOptionValue"
+        v-bind:classification="classification"
         @getDataByBtn="getDataByBtn"
         />
     </div>
@@ -51,7 +53,6 @@
 <script>
 import TableTop from '@/components/table/TableTop.vue'
 import PageBtn from '@/components/table/PageBtn.vue'
-
 // 테이블 상단 셀렉트 + 인풋 + 버튼 공통 사용 분리
 export default {
   name: 'AdminView',
@@ -61,29 +62,79 @@ export default {
   },
   data() {
     return {
-      searchKey: [
+      // 검색 옵션 목록 (selectbox)
+      searchCategoryOptions: [
         {
-          text: "사번",
-          value: "user_id"
-        }
+          value: "user_id",
+          expression: "사번"
+        },
+        // {
+        //   value: "name",
+        //   expression: "성명"
+        // }
       ],
-      users: [],
-      keyword: ""
+      searchCategoryOptionValue: 'user_id', // initial option value
+      classification: 'user', // use api http://133.186.212.200:8080/${user}/...
+
+      currPage: 1, // current page
+      pages: 1, // total pages
+      keyword: null, // search keyword
+      pageList: [], // list of page numbers displayed on paging box
+      // 테이블에 출력될 정보
+      users: []
     }
   },
   created () {
-    // /user/${input}/${paging}
     this.axios
-      .get('/user')
+      .get(`/user/1`)
       .then((res) => {
-        this.users = res.data
+        this.users = res.data.list
+        this.pageList = res.data.navigatepageNums
+        this.pages = res.data.pages
       })
-      .catch((err) => {
-        alert("사용자 목록을 불러오는데 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
+      .catch(() => {
+        alert("목록을 불러오는데 오류가 발생했습니다. 잠시 후 다시 시도해주세요.")
       })
   },
   methods: {
     // 유저 검색
+    getDataByBtn (classification, keyword, page, searchCategoryOptionValue) {
+      let apiUrl = ''
+      if (page < 1) {
+        page = 1
+      } else if (page > this.pages) {
+        page = this.pages
+      }
+      if (keyword === null || keyword == '')
+        apiUrl = `/${classification}/${page}`
+      else if (typeof keyword == "string")
+        apiUrl = `/${classification}/${keyword}/${page}`
+      else
+        alert('형식에 맞지 않는 검색어 입니다.')
+
+      let is_numeric = /^[0-9]+$/
+      if (!is_numeric.test(keyword)) {
+        alert("숫자만 입력 가능합니다.")
+      } else {
+        if (searchCategoryOptionValue == 'user_id') {
+          this.axios
+            .get(apiUrl)
+            .then((res) => {
+              this.users = res.data.list
+              this.pageList = res.data.navigatepageNums
+              if (keyword === null || keyword == '') {
+                this.keyword = ""
+              } else {
+                this.keyword = keyword
+              }
+              this.currPage = page
+              this.pages = res.data.pages
+            })
+        } else {
+          alert('검색 카테고리 선택에서 문제가 발생했습니다.')
+        }
+      }
+    },//2여기
     getSearch(keyword) {
       let is_numeric = /^[0-9]+$/
       if (!is_numeric.test(keyword)) alert("숫자만 입력 가능합니다.")
@@ -111,8 +162,10 @@ export default {
 
       if(role  == 2) role_to_be = 1
       this.axios
-      .put(`/user/up/${id}/${role_to_be}`)
+      .put(`/${this.classification}/up/${id}/${role_to_be}`)
       .then((res) => {
+        console.log(res)
+        console.log(JSON.stringify(res))
         if(res.status != 200) alert("관리자 지정에 오류가 발생하였습니다. 잠시 후 다시 시도해주세요.")
         else {
           this.$cookies.set('user_role', role_to_be)

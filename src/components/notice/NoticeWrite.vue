@@ -42,7 +42,6 @@
 
 <script>
 import store from '@/store'
-import axios from 'axios'
 import { mapActions } from 'vuex'
 export default {
   name: 'NoticeWrite',
@@ -83,8 +82,8 @@ export default {
       } else if (noticeInfoObj.content === null || noticeInfoObj.content == '') {
         alert("내용을 입력해주세요.")
       } else {
-      axios
-        .post('http://133.186.212.200:8080/notice/', noticeInfoObj)
+      this.axios
+        .post(`/notice/`, noticeInfoObj)
         .then((res) => {
           this.$router.push({ name: 'notice-board', params: { category: 'list' } })
         })
@@ -94,8 +93,8 @@ export default {
       }
     },
     deletePost() {
-      axios
-        .delete(`http://133.186.212.200:8080/notice/${this.notice_id}`)
+      this.axios
+        .delete(`/notice/${this.notice_id}`)
         .then((res) => {
           this.$router.push({ name: 'notice-board', params: { category: 'list' } })
         })
