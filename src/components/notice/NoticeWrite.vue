@@ -38,7 +38,7 @@
       <button v-if="role == 1" class="active-btn" @click="deletePost()">삭제</button>
     </div>
   </div>
-  <!-- <p> - for test -</p>
+  <p> - for test -</p>
   <p>>>> categoryId : {{ categoryId }}</p>
   <p>>>> Auth level(aka "ROLE") : {{ role }}</p>
   <p>>>> typeof role : {{ typeof role }}</p>
@@ -58,7 +58,7 @@
   <p>>>> notice_id : {{ notice_id }}</p>
   <br/>
   <br/>
-  <p>>>> create_date : {{ create_date }}</p> -->
+  <p>>>> create_date : {{ create_date }}</p>
 </template>
 
 <script>
@@ -101,6 +101,12 @@ export default {
       }
       // if (this.category === true)
       //   noticeInfoObj.category = 'notice'
+
+      if (noticeInfoObj.title === null || noticeInfoObj.title == '') {
+        alert("제목을 입력해주세요.")
+      } else if (noticeInfoObj.content === null || noticeInfoObj.content == '') {
+        alert("내용을 입력해주세요.")
+      } else {
       axios
         .post('http://133.186.212.200:8080/notice/', noticeInfoObj)
         .then((res) => {
@@ -110,6 +116,7 @@ export default {
         .catch(() => {
           alert("글쓰기/수정 에러")
         })
+      }
     },
     deletePost() {
       axios
@@ -131,7 +138,7 @@ export default {
         this.removeArticleInfo()
         this.title = ''
         this.category = ''
-        this.writer = ''
+        this.writer = store.state.userInfo.NAME
         this.create_date = ''
         this.content = ''
         this.notice_id = ''

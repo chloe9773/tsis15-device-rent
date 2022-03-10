@@ -10,9 +10,10 @@
         <option :key="index" v-for="(option,index) in searchCategoryOptions" :value="option.value">{{ option.expression }}</option>
       </select>
       <div class="input-wrap p-5 b-1 w-80">
-        <input v-if="keyword != 'noData'" type="text" class="" maxlength="50" v-model="keyword"/>
-        <input v-else type="text" class="" maxlength="50" placeholder="" v-model="keyword"/>
-        <span class="float-r mr-5" @click="getDataByBtn(classification, keyword, 0, searchCategoryOptionValue)">search</span>
+        <!-- <input v-if="keyword != 'noData'" type="text" class="" maxlength="50" v-model="keyword"/>
+        <input v-else type="text" class="" maxlength="50" placeholder="" v-model="keyword"/> -->
+        <input type="text" class="" maxlength="50" v-model="keyword"/>
+        <button class="cancel-btn float-r mr-5" @click="getDataByBtn(classification, keyword, 0, searchCategoryOptionValue)">search</button>
       </div>
     </div>
     <div class="table-wrap">
@@ -119,7 +120,7 @@ export default {
         page = this.pages
       }
       if (keyword === null || keyword == '')
-        apiUrl = `http://133.186.212.200:8080/${classification}/noData/${page}`
+        apiUrl = `http://133.186.212.200:8080/${classification}/${page}`
       else if (typeof keyword == "string")
         apiUrl = `http://133.186.212.200:8080/${classification}/${keyword}/${page}`
       else
@@ -131,7 +132,11 @@ export default {
           .then((res) => {
             this.articles = res.data.list
             this.pageList = res.data.navigatepageNums
-            this.keyword = keyword
+            if (keyword === null || keyword == '') {
+              this.keyword = ""
+            } else {
+              this.keyword = keyword
+            }
             this.currPage = page
             this.pages = res.data.pages
             console.log('' + JSON.stringify(res.data))
@@ -143,7 +148,7 @@ export default {
   },
   created () {
     axios
-      .get('http://133.186.212.200:8080/notice/noData/1')
+      .get('http://133.186.212.200:8080/notice/1')
       .then((res) => {
         this.articles = res.data.list
         this.pageList = res.data.navigatepageNums
