@@ -2,7 +2,6 @@
 <Modal>
     <template #modal-content-top class="form">
         <div class="b-1">
-            <!-- <div v-for="s in selected" v-bind:key="s">{{s}}</div> -->
         <div class="form-head d-flex space-between mb-2">
             <div class="form-title f-24 font-700 p-20 t-center w-65" style="padding-top:40px;">단말기 임대 품의서</div>
             <div class="form-approval-wrap d-flex">
@@ -13,13 +12,15 @@
                         <div class="title bb-1 p-5 f-12 font-700">품의자</div>
                         <div id="drafterlId-before" class="approval-sign p-5">박정화</div>
                     </div>
+                    <!-- 검토자는 usercontroller /user/reviewer/{id} 에서 get-->
                     <div class="approval approval-reviewed b-1">
                         <div class="title bb-1 p-5 f-12 font-700">검토자</div>
                         <div id="" class="approval-sign p-2">
                             <div id="approvalId-before" class="approval-sign p-5 d-none">김진민</div>
                             <select name="" id="approvalIdSelect" class="d-none" style="border-style:none;">
-                            <option value="김진민">김진민</option>
-                            <option value="임건호">임건호</option>
+                            <option v-for="(apprev,index) in this.reviewerlist.data" :key="index" >{{apprev.name}}</option>
+                            <!-- <option value="김진민">김진민</option>
+                            <option value="임건호">임건호</option> -->
                             </select>
                         </div>
                     </div>
@@ -56,27 +57,25 @@
             <tr class="space"></tr>
             <tr>
                 <td class="table-title">단말기</td>
-                <td colspan="3" name ="device" id ="deviceID" > {{this.selected[0]["name"]}}</td>
-                <!-- <td colspan="3" name ="device" id ="deviceID"> {{this.selected[0].length}}</td> -->
-
+                <td colspan="3" name ="device" id ="deviceID" > <label v-for="(item,index) in selected" :key="index" class="itemname">{{item.name + ",  "}}</label></td>
             </tr>
             <tr>
                 <td rowspan="3" class="table-title">임대정보</td>
                 <td class="table-title">관리자</td>
                 <td colspan="2">
-                    <input type="text" name="deviceUser" id="deviceUser" class="w-100" tabindex="1" autofocus>
+                    <input type="text" v-model="deviceuser" name="deviceUser" id="deviceUser" class="w-100" tabindex="1" autofocus>
                 </td>
             </tr>
             <tr>
                 <td class="table-title">부서</td>
                 <td colspan="2">
-                <input type="text" name="userDept" id="userDept" class="w-100" tabindex="2">
+                <input type="text" v-model="userdept" name="userDept" id="userDept" class="w-100" tabindex="2">
                 </td>
             </tr>
             <tr>
                 <td class="table-title">임대시작일</td>
                 <td colspan="2">
-                    <input type="text" name="rentStartDate" id="rentStartDate" class="w-100" tabindex="3">
+                    <input type="text" v-model="rentstartdate" name="rentStartDate" id="rentStartDate" class="w-100" tabindex="3">
                 </td>
             </tr>
             <tr>
@@ -91,7 +90,7 @@
                         <P class="t-4em mb-2">- 충전기 등 소모성 자체는 미포함</p>
                         <p class="t-2em red mb-2">- 1회 / 최대 5대 임개 가능 (다른 단말기 필요 시, 반납 후 재 임대 필dy)</p>
                 </div>
-                <textarea name="memo" id="memo" cols="30" rows="10" class="w-100" tabindex="4"></textarea>
+                <textarea v-model="memo" name="memo" id="memo" cols="30" rows="10" class="w-100" tabindex="4"></textarea>
                 </td>
             </tr>
             </table>
@@ -104,10 +103,10 @@
         </div>
         <div id="regular" class="form-btn-grp mt-50 d-none">
             <button class="cancel-btn mr-5" v-on:click="toggleModal('approval', 0)">취소</button>
-            <button class="active-btn">등록</button>
+            <button class="active-btn" v-on:click="approvalSubmit()">등록</button>
         </div>
         <div id="extension" class="form-btn-grp mt-50 d-none">
-            <button id="extensionBtn" class="active-btn" v-on:click="toggleModal('approval',1)">연장하기</button>
+          <button id="extensionBtn" class="active-btn" v-on:click="extendPeriod('approval',2)">연장하기</button>
         </div>
     </template>
 </Modal>
@@ -117,20 +116,116 @@
 import Modal from '@/components/Modal.vue'
 
 export default {
+  //검토자 불러오기
+  created: function () {
+    this.axios.get(`/user/reviewer/${this.$cookies.get('user_id')}`).then(res => {
+      let reviewerlist = []
+      this.reviewerlist=res
+      console.log("this.reviewerlist : "+ this.reviewerlist.data[0].name )
+    }).catch(res => {
+      console.log(res)
+    })
+  },
   name: 'DeviceDetail',
   components: {
     Modal
   }, 
+
+  // 관리자명, 부서명, 임대시작일, 메모, device-list에서 select된 데이터 
+  // --iscorrect : 연장하기 버튼 조건 구현 => 이미 대여된 기기의 사용자 정보와 대여하려는 사용자의 정보가 일치하는지 true false 도출해내기
+  data : function() {
+    return {
+      deviceuser: '',
+      userdept: '',
+      rentstartdate: '',
+      memo: '',
+      ids: [],
+      selectedlist: this.selected,
+      item_id : this.selected,
+      reviewerlist: [],
+      
+      // 하드코딩
+      user_id: '28107771',
+      name: '황민재',
+      dept_name: '손보서비스팀',
+      reviewer_id: '28108683'
+    }
+  },
   methods: {
     toggleModal (category, type) {
       this.$toggleModal(category, type)
     },
+    //연장하기 버튼 클릭
+    extendPeriod: function() {
+      console.log("아이템number: " + this.selected[0].item_id)
+      console.log("관리자 : " + this.deviceuser + "// 부서 : " + this.userdept 
+      + "// 임대시작일 : " + this.rentstartdate + "// 아이템명 : " + this.selectedlist[0].name)
+      
+      let ids = []
+      for (let i = 0 ; i < this.selected.length ; i++) {
+        let selectedItemId = this.selected[i].item_id
+        ids.push({
+          selectedItemId
+        })
+      }
+      // !!!!!!!!!!!!!!!!!!! 경로 url수정 필요
+      // var data = {
+        // deviceuser : this.deviceuser,
+        // d_id : this.user_id,
+        // ids: [1,2]
+        // r_id: this.reviewer_id
+      // }
+      var url = `http://133.186.212.200:8080/document/save/${this.user_id}/${this.reviewer_id}` ;
+      // 관리자명, 부서, 임대시작일 공란  
+      this.axios.post(url,ids)
+      .then(function(res) {
+        console.log("넘길 data 확인 : " + JSON.stringify(ids))
+        alert("대여기한이 연장되었습니다")
+        // this.$router.go() // 페이지 새로고침
+      })
+      .catch(function() {
+        console.error("에러//json형태 : " + JSON.stringify(ids) + "//url : " + url )
+      })
+    },
+
+
+
+    //등록버튼클릭
+    approvalSubmit: function() {
+      let ids = []
+      for (let i = 0 ; i < this.selected.length ; i++) {
+        let item_id = this.selected[i].item_id
+        ids.push(
+          item_id
+        )
+      }
+      console.log("관리자 : " + this.deviceuser + "// 부서 : " + this.userdept 
+      + "// 임대시작일 : " + this.rentstartdate + "// 아이템명 : " + this.selectedlist)
+      
+      // !!!!!!!!!!!!!!!!!!! 경로 url수정 필요
+      // var data = {
+        // deviceuser : this.deviceuser,
+        // d_id : this.user_id,
+        // ids: [1,2]
+        // r_id: this.reviewer_id
+      // }
+      var url = `http://133.186.212.200:8080/document/save/${this.$cookies.get('user_id')}/${this.reviewer_id}` ;
+      // axios 전송
+      this.axios.post(url,ids)
+      .then(function(res) {
+        console.log("넘길 data 확인 : " + JSON.stringify(ids))
+        alert("기안문이 등록되었습니다")
+        this.$router.go() // 페이지 새로고침
+      })
+      .catch(function() {
+        console.error("에러//json형태 : " + JSON.stringify(ids) + "//url : " + url )
+      })
+      
+    }
   },
   props: {
       selected : Array
   },
-  created() {
-      console.log("modalCreated : "+this.list)
-  },
+  
 }
 </script>

@@ -1,116 +1,6 @@
 <template>
 <DeviceDetail v-bind:selected="selected" v-if ="renderComp === true"/>
-<!-- <Modal>
-    <template #modal-content-top class="form">
-        <div class="b-1">
-        <div class="form-head d-flex space-between mb-2">
-            <div class="form-title f-24 font-700 p-20 t-center w-65" style="padding-top:40px;">단말기 임대 품의서</div>
-            <div class="form-approval-wrap d-flex">
-            <div class="form-approval-title b-1 f-12 bg-gray font-700 p-20">결재</div>
-            <div class="form-approval-lines">
-                <div class="form-approval-line d-flex">
-                    <div class="approval approval-writer b-1">
-                        <div class="title bb-1 p-5 f-12 font-700">품의자</div>
-                        <div id="drafterlId-before" class="approval-sign p-5">박정화</div>
-                    </div>
-                    <div class="approval approval-reviewed b-1">
-                        <div class="title bb-1 p-5 f-12 font-700">검토자</div>
-                        <div id="" class="approval-sign p-2">
-                            <div id="approvalId-before" class="approval-sign p-5 d-none">김진민</div>
-                            <select name="" id="approvalIdSelect" class="d-none" style="border-style:none;">
-                            <option value="김진민">김진민</option>
-                            <option value="임건호">임건호</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="approval approval-okuser b-1">
-                        <div class="title bb-1 p-5 f-12 font-700">결재자</div>
-                        <div id="okUserId-before" class="approval-sign p-5"></div>
-                    </div>
-                </div>
-                <div class="form-approval-line d-flex">
-                    <div class="approval approval-writer b-1">
-                        <div class="title bb-1 p-5 f-12 font-700">품의자</div>
-                        <div id="drafterId-after" class="approval-sign p-5">박정화</div>
-                    </div>
-                    <div class="approval approval-reviewed b-1">
-                        <div class="title bb-1 p-5 f-12 font-700">검토자</div>
-                        <div id="approvalId-after" class="approval-sign p-5">박정화</div>
-                    </div>
-                    <div class="approval approval-okuser b-1">
-                        <div class="title bb-1 p-5 f-12 font-700">결재자</div>
-                        <div id="okUserId-after" class="approval-sign p-5">박정화</div>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </div>
-        <div class="form-body">
-            <table class="form f-14 w-100" id="approvalTable">
-            <tr>
-                <td class="table-title">일련번호</td>
-                <td>티시스-IT사업본부-A072</td>
-                <td class="table-title">작성일</td>
-                <td>2022/03/01</td>
-            </tr>
-            <tr class="space"></tr>
-            <tr id="formbodytr">
-                <td class="table-title">단말기</td>
-                <td colspan="3" name ="device" id ="deviceID">
-                  {{this.list[0].item_id}}
-                </td>
-            </tr>
-            <tr>
-                <td rowspan="3" class="table-title">임대정보</td>
-                <td class="table-title">관리자</td>
-                <td colspan="2">
-                    <input type="text" name="deviceUser" id="deviceUser" class="w-100" tabindex="1" autofocus>
-                </td>
-            </tr>
-            <tr>
-                <td class="table-title">부서</td>
-                <td colspan="2">
-                <input type="text" name="userDept" id="userDept" class="w-100" tabindex="2">
-                </td>
-            </tr>
-            <tr>
-                <td class="table-title">임대시작일</td>
-                <td colspan="2">
-                    <input type="text" name="rentStartDate" id="rentStartDate" class="w-100" tabindex="3">
-                </td>
-            </tr>
-            <tr>
-                <td class="table-title"></td>
-                <td colspan="3">
-                <div class="t-left f-12">
-                    <p class="font-700 mb-2">- 임대 기본 규정</p>
-                        <p class="t-2em mb-2">- 대여기간 1개월 (휴일 포함, 연장 최대 달)</p>
-                        <p class="t-2em mb-2">- 대여기간 연장은 대기 수요가 없는 상황에 한함</p>
-                        <P class="t-2em mb-2">- 반납 지연 , 연체일 상당 일자 만큼 재대여 불가</P>
-                        <P class="t-2em mb-2">- 고장 및 분실 시 해당 단말기 배상</P>
-                        <P class="t-4em mb-2">- 충전기 등 소모성 자체는 미포함</p>
-                        <p class="t-2em red mb-2">- 1회 / 최대 5대 임개 가능 (다른 단말기 필요 시, 반납 후 재 임대 필dy)</p>
-                </div>
-                <textarea name="memo" id="memo" cols="30" rows="10" class="w-100" tabindex="4"></textarea>
-                </td>
-            </tr>
-            </table>
-        </div>
-        </div>
-    </template>
-    <template #modal-content-bottom>
-        <div class="document-wrap b-1 w-100 mt-15">
-            <img src="@/assets/img/rental_agreement.jpg" class="w-100" alt="">
-        </div>
-        <div id="regular" class="form-btn-grp mt-50 d-none">
-            <button class="cancel-btn mr-5" v-on:click="toggleModal('approval', 0)">취소</button>
-            <button class="active-btn">등록</button>
-        </div>
-        <div id="extension" class="form-btn-grp mt-50 d-none">
-            <button id="extensionBtn" class="active-btn" v-on:click="toggleModal('approval',1)">연장하기</button>
-        </div>
-    </template>
-</Modal> -->
+<DeviceDetailLog v-bind:devicedetaillist="devicedetaillist" v-if ="isDeviceDetailLog === true"/>
     <div class="main-content-admin w-70 m-auto">
         <div class="table-title- mb-20 d-flex space-between">
             <div class="table-title-left d-flex w-70">
@@ -135,20 +25,20 @@
                     <th class="v-middle">단말기명</th>
                     <th class="v-middle">대여 현황</th>
                     <th class="v-middle">
-                        <button class="active-btn" v-on:click="toggleModal('approval',2)">대여하기</button>
+                        <button class="active-btn" v-on:click="toggleModal('approval',1)">대여하기</button>
                     </th>
                     <th class="v-middle hiddencol">
                       <input type="hidden">
                     </th>
                 </thead>
                 <tbody class="f-13 t-center" id="ttt">
-                  <tr :key="index" v-for="(item,index) in list" class="bb-1 cursor tabletr" >
+                  <tr :key="index" v-for="(item,index) in list"  class="bb-1 cursor tabletr">
                     <td class="w-15" id="category" >{{item.category}}</td>
                     <td class="w-10" id="brand" >{{item.brand}}</td>
-                    <td id="name" >{{item.name}}</td>
-                    <td class="w-15 grn" id="status"> {{item.status}}</td>
+                    <td id="name" @click="deviceDeatailclick(index)"  >{{item.name}}</td>
+                    <td v-bind:class="[{'w-15':item.status == '대여가능'}, {'w-15 grn':item.status == '대여불가,예약가능'}, {'w-15 red':item.status == '대여불가,예약불가'}]" id="status"> {{item.status}}</td>
                     <td class="w-15">
-                      <input type="checkbox" class="devicecheck" v-model= "selected" :value= item @change="tmpFunc()"/>
+                      <input type="checkbox" class="devicecheck" v-model= "selected" :value = item @change="tmpFunc()"/>
                     </td>
                     <td class="w-10 hiddencol">
                       <input type="hidden" :value = item.serialnum />
@@ -162,24 +52,24 @@
 
 
 <script>
-import axios from 'axios'
 import Modal from '@/components/Modal.vue'
 import DeviceDetail from '@/components/DeviceDetail.vue'
-
+import DeviceDetailLog from '@/components/admin/DeviceTableDetailLog.vue'
 export default {
   // 창이 열리자마자 데이터 받아와서 담기
   created: function(){
-    axios.get('http://133.186.212.200:8080/item/paging/1').then(res => {
+    this.axios.get('/item/paging/1').then(res => {
       this.list=res.data.list
   }).catch(res => {
     console.log(res)
   })
   },
-  
+
   name: 'DeviceList',
   components: {
     Modal,
-    DeviceDetail
+    DeviceDetail,
+    DeviceDetailLog
   },
 
   // 각 row 체크 : v-model = "selected"
@@ -188,53 +78,104 @@ export default {
       list: [],
       selected: [],
       slides: document.getElementsByClassName('tabletr'),
-      item_id: [],
-      serialnum: [],
-      name: [],
-      brand: [],
-      category: [],
-      status: [],
-      pagnum: 1,
-      slist: [],
-      test: [],
-      renderComp: false
+      renderComp: false,
+      user_id: '',
+      name:'',
+      dept_name:'',
+
+      // 디바이스 상세 모달
+      isDeviceDetailLog: false,
+      devicedetaillist:[]
     }
   },
+  
   methods: {
+    //모달 렌더링
     tmpFunc() {
       this.renderComp = true
     },
-    toggleModal (category, type) {
-      // this.renderComp = true;
-      console.log("modal: " + this.selected[0].item_id)
-      this.test = this.selected
-      console.log("modal test: " + this.test[0].item_id)
-      // console.log(document.getElementById("approvalTable").getElementsByTagName("tr").length)
-      console.log(this.renderComp)
-      this.$toggleModal(category, type)
+
+    //상세보기 모달
+    deviceDeatailclick(index){
+      console.log("list : "+this.list[index].status+"//index : " + index + "상세내용"+this.list[index][1])
+      
+      let devicedetaillist = []
+      devicedetaillist.push(this.list[index])
+      this.devicedetaillist = devicedetaillist
+      this.isDeviceDetailLog = !this.isDeviceDetailLog
+      console.log("클릭했을때 T&F : " + this.isDeviceDetailLog)
+      this.$toggleModal('device',0)
     },
+    //체크된 디바이스 대여하기
+    toggleModal (category, type) {
+      type = 1 
+      console.log("selected.status : "+this.selected[0].status+"몇개"+this.selected.length + "// category : " 
+      + category + "// type : " + type + "typeOf :" + typeof(this.selected[0].status))
+      
+      //(1)다중 대여시, 모두 대여가능 상태여야 할 때
+      outerLoop:
+      if (this.selected.length > 1 && this.selected.length <= 5) {
+        for (let i=0 ; i < this.selected.length ; i++) {
+          if(this.selected[i].status != '대여가능') {
+            alert("알림 : 2개 이상의 단말기 대여시, 모두 대여가능 상태여야 합니다!!")
+            break outerLoop
+          }
+        }
+        console.log("여러개를 선택하여 대여 : "+"// category : " + category + "// type : " + type)
+        this.$toggleModal(category, type)
+      }
+
+      //(2)한 개만 선택
+      else if (this.selected.length = 1) {
+        //(2-1)대여 가능 상태
+        if (this.selected[0].status == '대여가능') {
+          console.log("this.selected.length : " + this.selected.length + "//한 개만 선택하여 대여 : " + "// category : " + category + "// type : " + type)
+          this.$toggleModal(category, type)
+        } 
+        
+        //(2-2)연장
+        else if (this.selected[0].status == null) {
+          type = 2
+          console.log("디바이스 연장 : " + "// category : " + category + "// type : " + type)
+          this.$toggleModal(category, type)
+        }
+        //(2-3)현재 대여상태이나 예약 가능시
+        else if (this.selected[0].status == '대여불가,예약가능') {
+          type = 3
+          console.log("예약 : "+"// category : " + category + "// type : " + type)
+          this.$toggleModal(category, type)
+        } 
+      
+        //(2-4)대여 및 예약 모두 불가할시
+        else if (this.selected.status[0] == '대여불가,예약불가') {
+          type = 4
+          alert("알림 : 선택된 단말기는 현재 대여가 불가합니다")
+          this.$toggleModal(category, type)
+        }
+      } 
+      //(3) 체크 갯수 5개 초과한 채로 대여하기 클릭 시
+      else if (this.selected.length > 5) {
+        alert("대여 가능한 단말기 갯수를 초과하였습니다")
+      } 
+    },
+
     // 대여 가능 항목만 보기 체크
     availableChecked: function () {
-      alert('대여가능항목눌림' + "T&F : " + document.getElementById('usecheckbox').checked + "///////"+this.slides)
       if (document.getElementById('usecheckbox').checked === true) {
         for (let i=0; i<this.slides.length;i++) {
-          if(this.slides[i].getElementsByTagName("td")[3].innerText==='예약중') {
+          if(this.slides[i].getElementsByTagName("td")[3].innerText==='대여불가,예약불가') {
             this.slides[i].style.display='none'
           }
         }
       } else {
           for (let i=0; i<this.slides.length;i++){
-            if(this.slides[i].getElementsByTagName("td")[3].innerText==='예약중'){
+            if(this.slides[i].getElementsByTagName("td")[3].innerText==='대여불가,예약불가'){
             this.slides[i].style.display=''
           }
         }
       }
     }
-    // toggleModal (category, type) {
-    //   this.$toggleModal(category, type)
-    // }
   }
-  
 }
 </script>
 
