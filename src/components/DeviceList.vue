@@ -93,25 +93,27 @@ export default {
     //모달 렌더링
     tmpFunc() {
       this.renderComp = true
+      this.isDeviceDetailLog = false
     },
 
     //상세보기 모달
     deviceDeatailclick(index){
       console.log("list : "+this.list[index].status+"//index : " + index + "상세내용"+this.list[index][1])
-      
+      this.renderComp = false
       let devicedetaillist = []
       devicedetaillist.push(this.list[index])
       this.devicedetaillist = devicedetaillist
-      this.isDeviceDetailLog = !this.isDeviceDetailLog
+      this.isDeviceDetailLog = !this.isDeviceDetailLog  
       console.log("클릭했을때 T&F : " + this.isDeviceDetailLog)
-      this.$toggleModal('device',0)
+      // this.$toggleModal('device',0)
     },
     //체크된 디바이스 대여하기
     toggleModal (category, type) {
       type = 1 
       console.log("selected.status : "+this.selected[0].status+"몇개"+this.selected.length + "// category : " 
       + category + "// type : " + type + "typeOf :" + typeof(this.selected[0].status))
-      
+      this.isDeviceDetailLog = false
+      this.renderComp = true
       //(1)다중 대여시, 모두 대여가능 상태여야 할 때
       outerLoop:
       if (this.selected.length > 1 && this.selected.length <= 5) {

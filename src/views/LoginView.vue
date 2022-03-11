@@ -56,7 +56,7 @@ export default {
       let router = this.$router;
 
       axios
-        .post("http://133.186.212.200:8080/loginOk.do", data)
+        .post("/loginOk.do", data)
         .then((res) => {
           if(res.status == 200) {
             if (res.data.RESULT == 'FAIL') {
@@ -66,6 +66,7 @@ export default {
               this.$cookies.set("user_name", res.data.NAME)
               this.$cookies.set("user_dept", res.data.CP_NAME)
               this.$cookies.set("user_role", res.data.ROLE)
+              // this.$cookies.set("user_role", 3) // 관리자로 하드코딩
               
               if (this.$cookies.get("user_role") > 1) router.push({ path : "/approval-list-board"})
               else router.push({ path : "/device-list-board"})

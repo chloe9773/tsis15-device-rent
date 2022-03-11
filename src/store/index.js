@@ -61,7 +61,7 @@ export default createStore({
       // 태광 서버 : https://www.t-ammo.com/IGWS/loginLegacy_.json
       // 15기 서버 : http://133.186.212.200:8080/loginOk.do
       axios
-        .post('http://133.186.212.200:8080/loginOk.do', loginObj)
+        .post('/loginOk.do', loginObj)
         .then((res) => {
           if (res.data.RESULT === 'SUCCESS') {
             commit('loginSuccess', res.data)
