@@ -10,37 +10,34 @@
                 <div class="form-approval-line d-flex">
                     <div class="approval approval-writer b-1">
                         <div class="title bb-1 p-5 f-12 font-700">품의자</div>
-                        <div id="drafterlId-before" class="approval-sign p-5">박정화</div>
+                        <div id="drafterlId-before" class="approval-sign p-5">{{this.$cookies.get('user_name')}}</div>
                     </div>
-                    <!-- 검토자는 usercontroller /user/reviewer/{id} 에서 get-->
                     <div class="approval approval-reviewed b-1">
                         <div class="title bb-1 p-5 f-12 font-700">검토자</div>
                         <div id="" class="approval-sign p-2">
-                            <div id="approvalId-before" class="approval-sign p-5 d-none">김진민</div>
+                            <div id="approvalId-before" class="approval-sign p-5 d-none"></div>
                             <select name="" id="approvalIdSelect" class="d-none" style="border-style:none;">
                             <option  v-for="(reviewer,index) in this.reviewerlist.data" :value="reviewer.user_id" :key="index" >{{reviewer.name}}</option>
-                            <!-- <option value="김진민">김진민</option>
-                            <option value="임건호">임건호</option> -->
                             </select>
                         </div>
                     </div>
                     <div class="approval approval-okuser b-1">
                         <div class="title bb-1 p-5 f-12 font-700">결재자</div>
-                        <div id="okUserId-before" class="approval-sign p-5"></div>
+                        <div id="okUserId-before" class="approval-sign p-5">관리자</div>
                     </div>
                 </div>
                 <div class="form-approval-line d-flex">
                     <div class="approval approval-writer b-1">
                         <div class="title bb-1 p-5 f-12 font-700">품의자</div>
-                        <div id="drafterId-after" class="approval-sign p-5">박정화</div>
+                        <div id="drafterId-after" class="approval-sign p-5">승인</div>
                     </div>
                     <div class="approval approval-reviewed b-1">
                         <div class="title bb-1 p-5 f-12 font-700">검토자</div>
-                        <div id="approvalId-after" class="approval-sign p-5">박정화</div>
+                        <div id="approvalId-after" class="approval-sign p-5"></div>
                     </div>
                     <div class="approval approval-okuser b-1">
                         <div class="title bb-1 p-5 f-12 font-700">결재자</div>
-                        <div id="okUserId-after" class="approval-sign p-5">박정화</div>
+                        <div id="okUserId-after" class="approval-sign p-5"></div>
                     </div>
                 </div>
             </div>
@@ -52,7 +49,7 @@
                 <td class="table-title">일련번호</td>
                 <td>티시스-IT사업본부-A072</td>
                 <td class="table-title">작성일</td>
-                <td>2022/03/01</td>
+                <td>{{createToday}}</td>
             </tr>
             <tr class="space"></tr>
             <tr>
@@ -75,7 +72,7 @@
             <tr>
                 <td class="table-title">임대시작일</td>
                 <td colspan="2">
-                    <input type="text" v-model="rentstartdate" name="rentStartDate" id="rentStartDate" class="w-100" tabindex="3">
+                    <input type="text" v-model="rentstartdate" name="rentStartDate" id="rentStartDate" class="w-100" tabindex="3" />
                 </td>
             </tr>
             <tr>
@@ -85,9 +82,9 @@
                     <p class="font-700 mb-2">- 임대 기본 규정</p>
                         <p class="t-2em mb-2">- 대여기간 1개월 (휴일 포함, 연장 최대 달)</p>
                         <p class="t-2em mb-2">- 대여기간 연장은 대기 수요가 없는 상황에 한함</p>
-                        <P class="t-2em mb-2">- 반납 지연 , 연체일 상당 일자 만큼 재대여 불가</P>
-                        <P class="t-2em mb-2">- 고장 및 분실 시 해당 단말기 배상</P>
-                        <P class="t-4em mb-2">- 충전기 등 소모성 자체는 미포함</p>
+                        <p class="t-2em mb-2">- 반납 지연 , 연체일 상당 일자 만큼 재대여 불가</p>
+                        <p class="t-2em mb-2">- 고장 및 분실 시 해당 단말기 배상</p>
+                        <p class="t-4em mb-2">- 충전기 등 소모성 자체는 미포함</p>
                         <p class="t-2em red mb-2">- 1회 / 최대 5대 임개 가능 (다른 단말기 필요 시, 반납 후 재 임대 필dy)</p>
                 </div>
                 <textarea v-model="memo" name="memo" id="memo" cols="30" rows="10" class="w-100" tabindex="4"></textarea>
@@ -125,13 +122,25 @@ export default {
       console.log(res)
     })
   },
+  computed : {
+      createToday() {
+        var today = new Date();
+
+        var year = today.getFullYear();
+        var month = ('0' + (today.getMonth() + 1)).slice(-2);
+        var day = ('0' + today.getDate()).slice(-2);
+
+        var dateString = year + '-' + month  + '-' + day;
+
+        return dateString
+      }
+  },
   name: 'DeviceDetail',
   components: {
     Modal
   }, 
 
   // 관리자명, 부서명, 임대시작일, 메모, device-list에서 select된 데이터 
-  // --iscorrect : 연장하기 버튼 조건 구현 => 이미 대여된 기기의 사용자 정보와 대여하려는 사용자의 정보가 일치하는지 true false 도출해내기
   data : function() {
     return {
       deviceuser: '',
@@ -142,7 +151,8 @@ export default {
       selectedlist: this.selected,
       item_id : this.selected,
       reviewerlist: {},
-      selstatus: ''
+      selstatus: '',
+      today: ''
       // 하드코딩
       // user_id: '28107771',
       // name: '황민재',
@@ -156,10 +166,6 @@ export default {
     },
     //연장하기 버튼 클릭
     extendPeriod: function() {
-      console.log("아이템number: " + this.selected[0].item_id)
-      console.log("관리자 : " + this.deviceuser + "// 부서 : " + this.userdept 
-      + "// 임대시작일 : " + this.rentstartdate + "// 아이템명 : " + this.selectedlist[0].name)
-      
       let ids = []
       let approvalIdSelect = document.getElementById('approvalIdSelect')
       let optionvalue = approvalIdSelect.options[approvalIdSelect.selectedIndex].value
@@ -169,8 +175,8 @@ export default {
           item_id
         )
       }
-      var url = `/document/save/${this.$cookies.get('user_id')}/${optionvalue}/티시스-IT사업본부-A072/${this.selstatus}`
-      // 관리자명, 부서, 임대시작일 공란  
+      
+      var url = `/document/save/${this.$cookies.get('user_id')}/${optionvalue}/티시스-IT사업본부-A072/${this.selstatus}` ;
       this.axios.post(url,ids)
       .then(function(res) {
         console.log("넘길 data 확인 : " + JSON.stringify(ids))
@@ -182,7 +188,7 @@ export default {
       })
     },
 
-
+    
 
     //등록버튼클릭
     approvalSubmit: function() {
@@ -197,12 +203,8 @@ export default {
         )
       }
       this.selstatus = this.selected[0].status
-      console.log("관리자 : " + this.deviceuser + "// 부서 : " + this.userdept 
-      + "// 임대시작일 : " + this.rentstartdate + "// 아이템명 : " + this.selectedlist
-      + "// selstatus : " + this.selstatus + "//검토자사번 : " + optionvalue)
-      
+     
       var url = `/document/save/${this.$cookies.get('user_id')}/${optionvalue}/티시스-IT사업본부-A072/${this.selstatus}` ;
-
       // axios 전송
       this.axios.post(url,ids)
       .then((res) => {
@@ -213,12 +215,10 @@ export default {
       .catch(() => {
         console.error("에러//json형태 : " + JSON.stringify(ids) + "//url : " + url )
       })
-      
     }
   },
   props: {
       selected : Array
   },
-  
 }
 </script>

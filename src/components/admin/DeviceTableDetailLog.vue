@@ -34,7 +34,7 @@
                 </div>
                 <div class="item-wrap">
                     <label class="font-700 mr-5">구매처 : </label>
-                    <a :href="this.item.link" class="underline" target="_blank">사이트로 바로 이동</a>
+                    <a href="https:www.naver.com" class="underline" target="_blank">사이트로 바로 이동</a>
                     <!-- <a v-bind:href="this.item.link" target="_blank">사이트로 바로 이동</a> -->
                 </div>
                 <div class="item-wrap">
@@ -50,23 +50,24 @@
     </template>
     <template #modal-content-bottom>
         <div class="device-status-list">
-                <div class="table-wrap w-100">
+                <div class="table-wrap">
                     <table class="w-100">
                         <thead class="f-14 font-700 bb-2 bt-2">
                             <th class="v-middle">임대시작일</th>
                             <th class="v-middle">부서</th>
-                            <th class="v-middle">관리</th>
+                            <th class="v-middle">대여</th>
                             <th class="v-middle">임대종료일</th>
                             <th class="v-middle">부서</th>
                             <th class="v-middle">관리</th>
                         </thead>
                         <tbody class="f-13 t-center">
                             <tr v-for="log in loglist" :key="log" class="bb-1">
-                                <td class="w-15">{{log.rental_date}}</td>
-                                <td>{{log.rental_date}}</td>
+                                <td class="w-15">{{utcToKst(log.rental_date)}}</td>
+                                <td>{{log.dept_name}}</td>
                                 <td class="w-10">{{log.name}}</td>
-                                <td class="w-15">{{log.return_date}}</td>
-                                <td>{{log.rental_date}}</td>
+                                <td class="w-15">{{utcToKst(log.return_date)}}</td>
+                                <td v-if="log.check_name != null">기획전략파트</td>
+                                <td v-else/>
                                 <td class="w-10">{{log.checker_name}}</td>
                             </tr>
                         </tbody>
@@ -106,11 +107,15 @@ export default {
   methods:{
     toggleModal (category, type) {
       this.$toggleModal(category, type)
+    },
+    utcToKst(data){
+      const kst = moment(data,"YYYY-MM-DDTHH:mm:ssZ")
+      const result = kst["_d"];
+      return moment(result).format('YYYY-MM-DD')
     }
   },
   props: {
     devicedetaillist : Object
-    
   }
 }
 </script>

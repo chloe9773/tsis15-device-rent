@@ -4,13 +4,6 @@
     <div class="main-content-admin w-70 m-auto">
         <div class="table-title- mb-20 d-flex space-between">
             <div class="table-title-left d-flex w-70">
-                <select name="" id="" class="p-5 mr-5">
-                    <option value="search-keyword">단말기명</option>
-                </select>
-                <div class="input-wrap p-5 b-1 w-70">
-                    <input type="text" class="" />
-                    <span class="float-r mr-5">search</span>
-                </div>
             </div>
             <div class="table-title-right" style="transform:translateY(20%);">
                 <span class="f-14" >대여 가능 항목만 보기</span>
@@ -49,7 +42,6 @@
         </div>
     </div>
 </template>
-
 
 <script>
 import Modal from '@/components/Modal.vue'
@@ -110,8 +102,6 @@ export default {
     //체크된 디바이스 대여하기
     toggleModal (category, type) {
       type = 1 
-      console.log("selected.status : "+this.selected[0].status+"몇개"+this.selected.length + "// category : " 
-      + category + "// type : " + type + "typeOf :" + typeof(this.selected[0].status))
       this.isDeviceDetailLog = false
       this.renderComp = true
       //(1)다중 대여시, 모두 대여가능 상태여야 할 때
