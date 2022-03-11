@@ -1,73 +1,96 @@
 <template>
 <DeviceDetail v-bind:selected="selected" v-if ="renderComp === true"/>
 <DeviceDetailLog v-bind:devicedetaillist="devicedetaillist" v-if ="isDeviceDetailLog === true"/>
-    <div class="main-content-admin w-70 m-auto">
-        <div class="table-title- mb-20 d-flex space-between">
-            <div class="table-title-left d-flex w-70">
-            </div>
-            <div class="table-title-right" style="transform:translateY(20%);">
-                <span class="f-14" >대여 가능 항목만 보기</span>
-                <input type="checkbox" name="" id="usecheckbox" class="" @click="availableChecked">
-            </div>
-        </div>
-        <div class="table-wrap w-100">
-            <table class="table w-100" id="device-list-table">
-                <thead class="f-14 font-700 bb-2 bt-2">
-                    <th class="p-20">종류</th>
-                    <th class="v-middle">브랜드</th>
-                    <th class="v-middle">단말기명</th>
-                    <th class="v-middle">대여 현황</th>
-                    <th class="v-middle">
-                        <button class="active-btn" v-on:click="toggleModal('approval',1)">대여하기</button>
-                    </th>
-                    <th class="v-middle hiddencol">
-                      <input type="hidden">
-                    </th>
-                </thead>
-                <tbody class="f-13 t-center" id="ttt">
-                  <tr :key="index" v-for="(item,index) in list"  class="bb-1 cursor tabletr">
-                    <td class="w-15" id="category" >{{item.category}}</td>
-                    <td class="w-10" id="brand" >{{item.brand}}</td>
-                    <td id="name" @click="deviceDeatailclick(index)"  >{{item.name}}</td>
-                    <td v-bind:class="[{'w-15':item.status == '대여가능'}, {'w-15 grn':item.status == '대여불가,예약가능'}, {'w-15 red':item.status == '대여불가,예약불가'}]" id="status"> {{item.status}}</td>
-                    <td class="w-15">
-                      <input type="checkbox" class="devicecheck" v-model= "selected" :value = item @change="tmpFunc()"/>
-                    </td>
-                    <td class="w-10 hiddencol">
-                      <input type="hidden" :value = item.serialnum />
-                    </td>
-                  </tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="main-content-admin w-70 m-auto">
+    <div class="table-title- mb-20 d-flex space-between">
+      <div class="table-title-left d-flex w-70">
+      </div>
+      <div class="table-title-right" style="transform:translateY(20%);">
+        <span class="f-14" >대여 가능 항목만 보기</span>
+        <input type="checkbox" name="" id="usecheckbox" class="" @click="availableChecked">
+      </div>
     </div>
+    <div class="table-wrap w-100">
+      <table class="table w-100" id="device-list-table">
+        <thead class="f-14 font-700 bb-2 bt-2">
+          <th class="p-20">종류</th>
+          <th class="v-middle">브랜드</th>
+          <th class="v-middle">단말기명</th>
+          <th class="v-middle">대여 현황</th>
+          <th class="v-middle">
+            <button class="active-btn" v-on:click="toggleModal('approval',1)">대여하기</button>
+          </th>
+          <th class="v-middle hiddencol">
+            <input type="hidden">
+          </th>
+        </thead>
+        <tbody class="f-13 t-center" id="ttt">
+          <tr :key="index" v-for="(item,index) in list"  class="bb-1 cursor tabletr">
+            <td class="w-15" id="category" >{{item.category}}</td>
+            <td class="w-10" id="brand" >{{item.brand}}</td>
+            <td id="name" @click="deviceDeatailclick(index)"  >{{item.name}}</td>
+            <td v-bind:class="[{'w-15':item.status == '대여가능'}, {'w-15 grn':item.status == '대여불가,예약가능'}, {'w-15 red':item.status == '대여불가,예약불가'}]" id="status"> {{item.status}}</td>
+            <td class="w-15">
+              <input type="checkbox" class="devicecheck" v-model= "selected" :value = item @change="tmpFunc()"/>
+            </td>
+            <td class="w-10 hiddencol">
+              <input type="hidden" :value = item.serialnum />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <PageBtn
+        v-bind:pageList="pageList"
+        v-bind:currPage="currPage"
+        v-bind:pages="pages"
+        v-bind:keyword="keyword"
+        v-bind:searchCategoryOptionValue="searchCategoryOptionValue"
+        v-bind:classification="classification"
+        @getDataByBtn="getDataByBtn"
+        />
+    </div>
+  </div>
 </template>
 
 <script>
 import Modal from '@/components/Modal.vue'
 import DeviceDetail from '@/components/DeviceDetail.vue'
 import DeviceDetailLog from '@/components/admin/DeviceTableDetailLog.vue'
+import PageBtn from '@/components/table/PageBtn.vue'
+
 export default {
   // 창이 열리자마자 데이터 받아와서 담기
-  created: function(){
+  created () {
     this.axios.get('/item/paging/1').then(res => {
       this.list=res.data.list
+      this.pageList = res.data.navigatepageNums
+      this.pages = res.data.pages
   }).catch(res => {
-    console.log(res)
+      alert('목록을 불러올 수 없습니다.')
+
   })
   },
-
   name: 'DeviceList',
   components: {
     Modal,
     DeviceDetail,
-    DeviceDetailLog
+    DeviceDetailLog,
+    PageBtn
   },
 
   // 각 row 체크 : v-model = "selected"
   data () {
     return {
-      list: [],
+      searchCategoryOptionValue: 'item_id', // initial option value
+      classification: 'item', // use api http://133.186.212.200:8080/${classification}/...
+
+      currPage: 1, // current page
+      pages: 1, // total pages
+      keyword: null, // search keyword
+      pageList: [], // list of page numbers displayed on paging box
+      // 테이블에 출력될 정보
+      list: [], // list of data
+
       selected: [],
       slides: document.getElementsByClassName('tabletr'),
       renderComp: false,
@@ -150,7 +173,6 @@ export default {
         alert("대여 가능한 단말기 갯수를 초과하였습니다")
       } 
     },
-
     // 대여 가능 항목만 보기 체크
     availableChecked: function () {
       if (document.getElementById('usecheckbox').checked === true) {
@@ -166,7 +188,33 @@ export default {
           }
         }
       }
-    }
+    },
+    getDataByBtn (classification, keyword, page, searchCategoryOptionValue) {
+      let apiUrl = ''
+      if (page < 1) {
+        page = 1
+      } else if (page > this.pages) {
+        page = this.pages
+      }
+      apiUrl = `/${classification}/paging/${page}`
+      if (searchCategoryOptionValue == 'item_id') {
+        this.axios
+          .get(apiUrl)
+          .then((res) => {
+            this.list = res.data.list
+            this.pageList = res.data.navigatepageNums
+            if (keyword === null || keyword == '') {
+              this.keyword = ""
+            } else {
+              this.keyword = keyword
+            }
+            this.currPage = page
+            this.pages = res.data.pages
+          })
+      } else {
+        alert('검색 카테고리 선택에서 문제가 발생했습니다.')
+      }
+    },
   }
 }
 </script>

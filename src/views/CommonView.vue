@@ -1,7 +1,6 @@
 <template>
 <MenuBar/>
 <DeviceList/>
-<PageBtn/>
 <DeviceDetail/>
 </template>
 <script>
@@ -14,7 +13,6 @@ export default {
   components: {
     MenuBar,
     DeviceList,
-    PageBtn,
     DeviceDetail
   }
 }
